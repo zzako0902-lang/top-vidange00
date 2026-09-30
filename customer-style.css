@@ -1,0 +1,415 @@
+/* إعدادات وتصفير الشاشة العامة للجوال */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+    --client-bg: #000c18;
+    --client-card-bg: #00172d;
+    --client-accent: #007fff;
+    --client-neon-green: #00ffaa;
+    --client-neon-glow: rgba(0, 255, 170, 0.2);
+    --client-text-light: #ffffff;
+    --client-text-muted: #819ebb;
+    --client-border: #092e52;
+}
+
+body {
+    background-color: var(--client-bg);
+    color: var(--client-text-light);
+    padding: 15px 10px 40px 10px;
+    direction: rtl;
+    min-height: 100vh;
+}
+
+/* حاوية الجوال المركزية المحددة */
+.client-container {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* الهيدر العلوي وشعار المحل */
+.client-header {
+    max-width: 500px;
+    margin: 10px auto 15px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--client-border);
+    padding-bottom: 12px;
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.client-drop-icon {
+    font-size: 28px;
+    color: #ffaa00;
+    filter: drop-shadow(0 0 6px #ffaa00);
+}
+
+.brand-titles h1 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.brand-titles p {
+    font-size: 10px;
+    color: var(--client-text-muted);
+}
+
+.germany-skew-badge {
+    width: 35px;
+    height: 18px;
+    background: linear-gradient(to bottom, #000 33.3%, #dd0000 33.3%, #dd0000 66.6%, #ffce00 66.6%);
+    border-radius: 2px;
+    transform: skewX(-15px);
+    margin-right: 10px;
+}
+
+.header-slogan {
+    font-size: 12px;
+    color: var(--client-text-muted);
+    font-weight: 500;
+}
+
+/* كارت السيارة العلوي ورقم اللوحة المميز */
+.car-profile-card {
+    background-color: var(--client-card-bg);
+    border: 1px solid var(--client-border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.car-meta-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.brand-label {
+    font-size: 13px;
+    color: var(--client-text-muted);
+}
+
+.model-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin: 2px 0 6px 0;
+}
+
+.spec-row {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--client-text-muted);
+}
+
+.spec-row .divider {
+    color: var(--client-border);
+}
+
+/* صندوق رقم اللوحة المحاكي تماماً للصورة */
+.plate-number-box {
+    border: 1px solid var(--client-border);
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    min-width: 120px;
+}
+
+.plate-label {
+    font-size: 10px;
+    color: var(--client-text-muted);
+    margin-bottom: 4px;
+}
+
+.plate-digits {
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.plate-icon {
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 24px;
+    color: rgba(0, 127, 255, 0.15);
+}
+/* تنسيق حقول الخيارات المغلقة (الفلاتر والزيوت) الموفرة للمساحة */
+.specs-selection-card {
+    background-color: var(--client-card-bg);
+    border: 1px solid var(--client-border);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.client-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.client-input-group label {
+    font-size: 13px;
+    color: var(--client-text-light);
+    font-weight: 500;
+}
+
+.client-input-group label i {
+    color: var(--client-text-muted);
+    margin-left: 5px;
+}
+
+.client-select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* تعديل خصائص القوائم المغلقة المنسدلة لتكون مريحة وأنيقة في الجوال */
+.client-select-wrapper select {
+    width: 100%;
+    background-color: var(--client-bg);
+    border: 1px solid var(--client-border);
+    border-radius: 6px;
+    color: var(--client-text-light);
+    padding: 12px 15px;
+    font-size: 14px;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    opacity: 0.9; /* جعلها واضحة ومقروءة */
+}
+
+.client-select-arrow {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--client-text-muted);
+    pointer-events: none;
+    font-size: 12px;
+}
+
+.client-drop-inside {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffaa00;
+    font-size: 16px;
+}
+
+/* شبكة كروت العداد والزيوت السريعة */
+.quick-status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.status-square-card {
+    background-color: var(--client-card-bg);
+    border: 1px solid var(--client-border);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-card-icon {
+    font-size: 26px;
+    color: var(--client-accent);
+}
+
+.oil-yellow-icon {
+    color: #ffaa00;
+}
+
+.status-card-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-title {
+    font-size: 11px;
+    color: var(--client-text-muted);
+    margin-bottom: 4px;
+}
+
+.status-value {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.status-value .unit {
+    font-size: 11px;
+    color: var(--client-text-muted);
+    font-weight: normal;
+}
+
+.status-subtext {
+    font-size: 10px;
+    color: var(--client-text-muted);
+    margin-top: 2px;
+}
+
+/* بطاقة موعد تغيير الزيت القادم المضيئة (إشعاع نيون أخضر ساحر) */
+.next-visit-neon-card {
+    background-color: rgba(0, 255, 170, 0.02);
+    border: 2px solid var(--client-neon-green);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 15px var(--client-neon-glow);
+}
+
+.neon-card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.neon-calendar-icon {
+    font-size: 32px;
+    color: var(--client-neon-green);
+}
+
+.neon-title-area h4 {
+    font-size: 12px;
+    color: var(--client-neon-green);
+    font-weight: 600;
+}
+
+.neon-date-value {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 4px 0;
+    letter-spacing: 0.5px;
+}
+
+.neon-countdown-text {
+    font-size: 11px;
+    color: var(--client-text-muted);
+}
+
+.neon-badge-status {
+    background-color: rgba(0, 255, 170, 0.1);
+    color: var(--client-neon-green);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* صندوق الملاحظات والتوصيات */
+.client-notes-card {
+    background-color: var(--client-card-bg);
+    border: 1px solid var(--client-border);
+    border-radius: 12px;
+    padding: 15px 18px;
+}
+
+.notes-card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.notes-icon {
+    color: var(--client-accent);
+    font-size: 16px;
+}
+
+.notes-card-title h4 {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.notes-content-text {
+    font-size: 12px;
+    color: var(--client-text-muted);
+    line-height: 1.6;
+}
+
+/* تذييل الصفحة وكلمة الشكر المائلة الأنيقة */
+.client-footer-area {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+.footer-scan-hint {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 60%;
+}
+
+.footer-qr-icon {
+    font-size: 20px;
+    color: var(--client-text-muted);
+}
+
+.footer-scan-hint p {
+    font-size: 10px;
+    color: var(--client-text-muted);
+    line-height: 1.4;
+}
+
+.thank-you-badge {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.thank-text {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+    color: var(--client-text-light);
+}
+
+/* محاكاة القوس الأصفر المضيء أسفل كلمة شكراً لثقتكم */
+.yellow-underline-curve {
+    width: 80px;
+    height: 4px;
+    background-color: #ffaa00;
+    border-radius: 50%;
+    margin-top: 2px;
+    box-shadow: 0 0 6px #ffaa00;
+}

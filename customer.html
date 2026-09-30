@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <!-- ========================================== -->
+    <!-- 1. إعداد الصفحة -->
+    <!-- ========================================== -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TOP-VIDANGE - حالة صيانة سيارتك</title>
+
+    <!-- ملف تصميم الزبون -->
+    <link rel="stylesheet" href="customer-style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+    <!-- ========================================== -->
+    <!-- 2. الهيدر -->
+    <!-- ========================================== -->
+
+    <header class="client-header">
+
+        <div class="header-brand">
+
+            <i class="fa-solid fa-droplet client-drop-icon"></i>
+
+            <div class="brand-titles">
+
+                <h1>TOP-VIDANGE</h1>
+
+                <p>خدمات تغيير الزيوت والفلاتر</p>
+
+            </div>
+
+            <div class="germany-skew-badge"></div>
+
+        </div>
+
+        <div class="header-slogan">
+            سيارتك تستحق الأفضل
+        </div>
+
+    </header>
+
+
+    <!-- ========================================== -->
+    <!-- 3. الحاوية الرئيسية -->
+    <!-- ========================================== -->
+
+    <main class="client-container">
+
+
+        <!-- ========================================== -->
+        <!-- 4. معلومات السيارة -->
+        <!-- ========================================== -->
+
+        <section class="car-profile-card">
+
+            <div class="car-meta-info">
+
+                <span class="brand-label" id="car-brand">
+                    جاري التحميل...
+                </span>
+
+                <h2 class="model-title" id="car-model">
+                    ...
+                </h2>
+
+                <div class="spec-row">
+
+                    <span id="car-year">
+                        ...
+                    </span>
+
+                    <span class="divider">|</span>
+
+                    <span id="car-engine">
+                        ...
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- رقم اللوحة محجوب حاليًا حسب تصميمك -->
+            <div class="plate-number-box">
+
+                <span class="plate-label">
+                    رقم السيارة
+                </span>
+
+                <div class="plate-digits" id="car-id">
+                    ...
+                </div>
+
+                <i class="fa-solid fa-car plate-icon"></i>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 5. الفلاتر ونوع الزيت -->
+        <!-- ========================================== -->
+
+        <section class="specs-selection-card">
+
+
+            <!-- أنواع الفلاتر -->
+
+            <div class="client-input-group">
+
+                <label>
+                    <i class="fa-solid fa-filter"></i>
+                    أنواع الفلاتر المعدلة
+                </label>
+
+                <div class="client-select-wrapper">
+
+                    <select id="client-filter-view" disabled>
+
+                        <option id="filter-value">
+                            جاري التحميل...
+                        </option>
+
+                    </select>
+
+                    <i class="fa-solid fa-chevron-down client-select-arrow"></i>
+
+                </div>
+
+            </div>
+
+
+            <!-- نوع الزيت -->
+
+            <div class="client-input-group">
+
+                <label>
+                    <i class="fa-solid fa-oil-can"></i>
+                    نوع الزيت
+                </label>
+
+                <div class="client-select-wrapper">
+
+                    <select id="client-oil-view" disabled>
+
+                        <option id="oil-value">
+                            جاري التحميل...
+                        </option>
+
+                    </select>
+
+                    <i class="fa-solid fa-droplet client-drop-inside"></i>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 6. المعلومات السريعة -->
+        <!-- ========================================== -->
+
+        <section class="quick-status-grid">
+
+
+            <!-- الكيلومترات -->
+
+            <div class="status-square-card">
+
+                <i class="fa-solid fa-gauge status-card-icon"></i>
+
+                <div class="status-card-data">
+
+                    <p class="status-title">
+                        عدد الكيلومترات الحالي
+                    </p>
+
+                    <h3 class="status-value">
+
+                        <span id="car-mileage">
+                            ...
+                        </span>
+
+                        <span class="unit">
+                            كم
+                        </span>
+
+                    </h3>
+
+                </div>
+
+            </div>
+
+
+            <!-- الزيت -->
+
+            <div class="status-square-card">
+
+                <i class="fa-solid fa-droplet status-card-icon oil-yellow-icon"></i>
+
+                <div class="status-card-data">
+
+                    <p class="status-title">
+                        نوع الزيت
+                    </p>
+
+                    <h3 class="status-value" id="car-oil">
+                        ...
+                    </h3>
+
+                    <p class="status-subtext">
+                        Full Synthetic
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 7. موعد الصيانة القادم -->
+        <!-- ========================================== -->
+
+        <section class="next-visit-neon-card">
+
+            <div class="neon-card-header">
+
+                <i class="fa-solid fa-calendar-days neon-calendar-icon"></i>
+
+                <div class="neon-title-area">
+
+                    <h4>
+                        موعد تغيير الزيت القادم
+                    </h4>
+
+                    <h2 class="neon-date-value" id="next-service-date">
+                        جاري التحميل...
+                    </h2>
+
+                    <p class="neon-countdown-text" id="service-status">
+                        ...
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="neon-badge-status">
+
+                <i class="fa-regular fa-clock"></i>
+
+                <span id="service-badge">
+                    موعد قادم
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 8. الملاحظات -->
+        <!-- ========================================== -->
+
+        <section class="client-notes-card">
+
+            <div class="notes-card-title">
+
+                <i class="fa-solid fa-note-sticky notes-icon"></i>
+
+                <h4>
+                    ملاحظات
+                </h4>
+
+            </div>
+
+            <p class="notes-content-text" id="car-notes">
+
+                يُفضل تغيير الزيت والفلتر حسب الموعد المحدد للحفاظ
+                على أعلى أداء وتبريد لمحرك السيارة.
+
+            </p>
+
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- 9. الفوتر -->
+        <!-- ========================================== -->
+
+        <footer class="client-footer-area">
+
+            <div class="footer-scan-hint">
+
+                <i class="fa-solid fa-qrcode footer-qr-icon"></i>
+
+                <p>
+                    امسح الرمز لعرض هذه المعلومات أو حفظها على هاتفك
+                </p>
+
+            </div>
+
+
+            <div class="thank-you-badge">
+
+                <span class="thank-text">
+                    شكراً لثقتكم
+                </span>
+
+                <div class="yellow-underline-curve"></div>
+
+            </div>
+
+        </footer>
+
+
+    </main>
+
+
+    <!-- ========================================== -->
+    <!-- 10. الاتصال بـ Google Apps Script -->
+    <!-- ========================================== -->
+
+    <script>
+
+        const APPS_SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbwwy9GQPTeYWot3QuzIPWoe8ufb8lBPqihoEy1Ankq72GpbfO7cLFTrqbYvQheG-_gfVA/exec";
+
+
+        // ==========================================
+        // 11. الحصول على ID من رابط الصفحة
+        // ==========================================
+
+        const urlParams = new URLSearchParams(window.location.search);
+
+        const carId = urlParams.get("id");
+
+
+        // ==========================================
+        // 12. عناصر الصفحة
+        // ==========================================
+
+        const brandElement =
+            document.getElementById("car-brand");
+
+        const modelElement =
+            document.getElementById("car-model");
+
+        const yearElement =
+            document.getElementById("car-year");
+
+        const engineElement =
+            document.getElementById("car-engine");
+
+        const idElement =
+            document.getElementById("car-id");
+
+        const mileageElement =
+            document.getElementById("car-mileage");
+
+        const oilElement =
+            document.getElementById("car-oil");
+
+        const oilSelectElement =
+            document.getElementById("oil-value");
+
+        const filterSelectElement =
+            document.getElementById("filter-value");
+
+        const nextServiceElement =
+            document.getElementById("next-service-date");
+
+        const serviceStatusElement =
+            document.getElementById("service-status");
+
+        const serviceBadgeElement =
+            document.getElementById("service-badge");
+
+        const notesElement =
+            document.getElementById("car-notes");
+
+
+        // ==========================================
+        // 13. التحقق من وجود ID
+        // ==========================================
+
+        if (!carId) {
+
+            brandElement.textContent = "خطأ";
+
+            modelElement.textContent =
+                "لم يتم العثور على رقم السيارة";
+
+        } else {
+
+            idElement.textContent = carId;
+
+            loadCarData();
+
+        }
+
+
+        // ==========================================
+        // 14. جلب بيانات السيارة
+        // ==========================================
+
+        async function loadCarData() {
+
+            try {
+
+                const response = await fetch(
+                    APPS_SCRIPT_URL +
+                    "?id=" +
+                    encodeURIComponent(carId)
+                );
+
+                const text = await response.text();
+
+                console.log("Google Response:");
+                console.log(text);
+
+
+                // ==========================================
+                // 15. تحليل البيانات القادمة
+                // ==========================================
+
+                const lines =
+                    text.split("\n");
+
+
+                const carData = {};
+
+
+                lines.forEach(line => {
+
+                    const separator =
+                        line.indexOf(":");
+
+                    if (separator === -1) {
+                        return;
+                    }
+
+                    const key =
+                        line.substring(0, separator).trim();
+
+                    const value =
+                        line.substring(separator + 1).trim();
+
+                    carData[key] = value;
+
+                });
+
+
+                // ==========================================
+                // 16. وضع البيانات داخل الصفحة
+                // ==========================================
+
+                brandElement.textContent =
+                    carData["BRAND"] || "---";
+
+                modelElement.textContent =
+                    carData["MODEL"] || "---";
+
+                yearElement.textContent =
+                    carData["YEAR"] || "---";
+
+                engineElement.textContent =
+                    carData["ENGINE"] || "---";
+
+                idElement.textContent =
+                    carData["ID"] || carId;
+
+                mileageElement.textContent =
+                    formatMileage(carData["MILEAGE"]);
+
+                oilElement.textContent =
+                    carData["OIL"] || "---";
+
+                oilSelectElement.textContent =
+                    carData["OIL"] || "---";
+
+                filterSelectElement.textContent =
+                    carData["FILTERS"] || "لم يتم تسجيل الفلاتر";
+
+
+                // ==========================================
+                // 17. موعد الصيانة
+                // ==========================================
+
+                if (carData["NEXT_SERVICE"]) {
+
+                    nextServiceElement.textContent =
+                        carData["NEXT_SERVICE"];
+
+                    updateServiceStatus(
+                        carData["NEXT_SERVICE"]
+                    );
+
+                } else {
+
+                    nextServiceElement.textContent =
+                        "غير محدد";
+
+                    serviceStatusElement.textContent =
+                        "لم يتم تحديد موعد الصيانة";
+
+                    serviceBadgeElement.textContent =
+                        "غير محدد";
+
+                }
+
+
+                // ==========================================
+                // 18. الملاحظات
+                // ==========================================
+
+                if (carData["NOTES"]) {
+
+                    notesElement.textContent =
+                        carData["NOTES"];
+
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error loading car:",
+                    error
+                );
+
+                brandElement.textContent =
+                    "تعذر تحميل البيانات";
+
+                modelElement.textContent =
+                    "حاول تحديث الصفحة";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // 19. تنسيق الكيلومترات
+        // ==========================================
+
+        function formatMileage(value) {
+
+            if (!value) {
+                return "---";
+            }
+
+            const number =
+                Number(
+                    String(value).replace(/,/g, "")
+                );
+
+            if (Number.isNaN(number)) {
+                return value;
+            }
+
+            return number.toLocaleString("en-US");
+
+        }
+
+
+        // ==========================================
+        // 20. حالة موعد الصيانة
+        // ==========================================
+
+        function updateServiceStatus(dateText) {
+
+            const serviceDate =
+                new Date(dateText);
+
+            if (Number.isNaN(serviceDate.getTime())) {
+
+                serviceStatusElement.textContent =
+                    "موعد الصيانة";
+
+                serviceBadgeElement.textContent =
+                    "موعد قادم";
+
+                return;
+
+            }
+
+
+            const today =
+                new Date();
+
+            today.setHours(0, 0, 0, 0);
+
+            serviceDate.setHours(0, 0, 0, 0);
+
+
+            const difference =
+                serviceDate - today;
+
+            const days =
+                Math.round(
+                    difference /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            if (days < 0) {
+
+                serviceStatusElement.textContent =
+                    "موعد الصيانة مرّ";
+
+                serviceBadgeElement.textContent =
+                    "متأخر";
+
+            } else if (days === 0) {
+
+                serviceStatusElement.textContent =
+                    "اليوم هو موعد الصيانة";
+
+                serviceBadgeElement.textContent =
+                    "اليوم";
+
+            } else if (days === 1) {
+
+                serviceStatusElement.textContent =
+                    "موعد الصيانة غداً";
+
+                serviceBadgeElement.textContent =
+                    "غداً";
+
+            } else {
+
+                serviceStatusElement.textContent =
+                    "متبقي " + days + " يوم";
+
+                serviceBadgeElement.textContent =
+                    "موعد قادم";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
