@@ -1,21 +1,16 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
-
-    <!-- ========================================== -->
-    <!-- 1. إعداد الصفحة -->
-    <!-- ========================================== -->
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>TOP-VIDANGE - حالة صيانة سيارتك</title>
 
-    <!-- ملف تصميم الزبون -->
     <link rel="stylesheet" href="customer-style.css">
 
-    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
@@ -23,10 +18,6 @@
 
 
 <body>
-
-    <!-- ========================================== -->
-    <!-- 2. الهيدر -->
-    <!-- ========================================== -->
 
     <header class="client-header">
 
@@ -53,16 +44,8 @@
     </header>
 
 
-    <!-- ========================================== -->
-    <!-- 3. الحاوية الرئيسية -->
-    <!-- ========================================== -->
-
     <main class="client-container">
 
-
-        <!-- ========================================== -->
-        <!-- 4. معلومات السيارة -->
-        <!-- ========================================== -->
 
         <section class="car-profile-card">
 
@@ -93,7 +76,6 @@
             </div>
 
 
-            <!-- رقم اللوحة محجوب حاليًا حسب تصميمك -->
             <div class="plate-number-box">
 
                 <span class="plate-label">
@@ -111,14 +93,8 @@
         </section>
 
 
-        <!-- ========================================== -->
-        <!-- 5. الفلاتر ونوع الزيت -->
-        <!-- ========================================== -->
-
         <section class="specs-selection-card">
 
-
-            <!-- أنواع الفلاتر -->
 
             <div class="client-input-group">
 
@@ -143,8 +119,6 @@
 
             </div>
 
-
-            <!-- نوع الزيت -->
 
             <div class="client-input-group">
 
@@ -172,14 +146,8 @@
         </section>
 
 
-        <!-- ========================================== -->
-        <!-- 6. المعلومات السريعة -->
-        <!-- ========================================== -->
-
         <section class="quick-status-grid">
 
-
-            <!-- الكيلومترات -->
 
             <div class="status-square-card">
 
@@ -208,8 +176,6 @@
             </div>
 
 
-            <!-- الزيت -->
-
             <div class="status-square-card">
 
                 <i class="fa-solid fa-droplet status-card-icon oil-yellow-icon"></i>
@@ -234,10 +200,6 @@
 
         </section>
 
-
-        <!-- ========================================== -->
-        <!-- 7. موعد الصيانة القادم -->
-        <!-- ========================================== -->
 
         <section class="next-visit-neon-card">
 
@@ -277,10 +239,6 @@
         </section>
 
 
-        <!-- ========================================== -->
-        <!-- 8. الملاحظات -->
-        <!-- ========================================== -->
-
         <section class="client-notes-card">
 
             <div class="notes-card-title">
@@ -302,10 +260,6 @@
 
         </section>
 
-
-        <!-- ========================================== -->
-        <!-- 9. الفوتر -->
-        <!-- ========================================== -->
 
         <footer class="client-footer-area">
 
@@ -336,28 +290,18 @@
     </main>
 
 
-    <!-- ========================================== -->
-    <!-- 10. الاتصال بـ Google Apps Script -->
-    <!-- ========================================== -->
-
     <script>
 
         const APPS_SCRIPT_URL =
             "https://script.google.com/macros/s/AKfycbwwy9GQPTeYWot3QuzIPWoe8ufb8lBPqihoEy1Ankq72GpbfO7cLFTrqbYvQheG-_gfVA/exec";
 
 
-        // ==========================================
-        // 11. الحصول على ID من رابط الصفحة
-        // ==========================================
+        const urlParams =
+            new URLSearchParams(window.location.search);
 
-        const urlParams = new URLSearchParams(window.location.search);
+        const carId =
+            urlParams.get("id");
 
-        const carId = urlParams.get("id");
-
-
-        // ==========================================
-        // 12. عناصر الصفحة
-        // ==========================================
 
         const brandElement =
             document.getElementById("car-brand");
@@ -399,49 +343,43 @@
             document.getElementById("car-notes");
 
 
-        // ==========================================
-        // 13. التحقق من وجود ID
-        // ==========================================
-
         if (!carId) {
 
-            brandElement.textContent = "خطأ";
+            brandElement.textContent =
+                "خطأ";
 
             modelElement.textContent =
                 "لم يتم العثور على رقم السيارة";
 
         } else {
 
-            idElement.textContent = carId;
+            idElement.textContent =
+                carId;
 
             loadCarData();
 
         }
 
 
-        // ==========================================
-        // 14. جلب بيانات السيارة
-        // ==========================================
-
         async function loadCarData() {
 
             try {
 
-                const response = await fetch(
-                    APPS_SCRIPT_URL +
-                    "?id=" +
-                    encodeURIComponent(carId)
-                );
+                const response =
+                    await fetch(
+                        APPS_SCRIPT_URL +
+                        "?id=" +
+                        encodeURIComponent(carId)
+                    );
 
-                const text = await response.text();
+
+                const text =
+                    await response.text();
+
 
                 console.log("Google Response:");
                 console.log(text);
 
-
-                // ==========================================
-                // 15. تحليل البيانات القادمة
-                // ==========================================
 
                 const lines =
                     text.split("\n");
@@ -455,61 +393,71 @@
                     const separator =
                         line.indexOf(":");
 
+
                     if (separator === -1) {
                         return;
                     }
 
+
                     const key =
-                        line.substring(0, separator).trim();
+                        line.substring(
+                            0,
+                            separator
+                        ).trim();
+
 
                     const value =
-                        line.substring(separator + 1).trim();
+                        line.substring(
+                            separator + 1
+                        ).trim();
 
-                    carData[key] = value;
+
+                    carData[key] =
+                        value;
 
                 });
 
 
-                // ==========================================
-                // 16. وضع البيانات داخل الصفحة
-                // ==========================================
-
                 brandElement.textContent =
                     carData["BRAND"] || "---";
+
 
                 modelElement.textContent =
                     carData["MODEL"] || "---";
 
+
                 yearElement.textContent =
                     carData["YEAR"] || "---";
+
 
                 engineElement.textContent =
                     carData["ENGINE"] || "---";
 
+
                 idElement.textContent =
                     carData["ID"] || carId;
 
+
                 mileageElement.textContent =
-                    formatMileage(carData["MILEAGE"]);
+                    formatMileage(
+                        carData["MILEAGE"]
+                    );
+
 
                 oilElement.textContent =
                     carData["OIL"] || "---";
 
+
                 oilSelectElement.textContent =
                     carData["OIL"] || "---";
 
+
                 filterSelectElement.textContent =
-                    carData["FILTERS"] || "لم يتم تسجيل الفلاتر";
+                    carData["FILTERS"] ||
+                    "لم يتم تسجيل الفلاتر";
 
-
-                // ==========================================
-                // 17. موعد الصيانة
-                // ==========================================
 
                 if (carData["NEXT_SERVICE"]) {
-
-                    nextServiceElement.textContent =
-                        carData["NEXT_SERVICE"];
 
                     updateServiceStatus(
                         carData["NEXT_SERVICE"]
@@ -529,10 +477,6 @@
                 }
 
 
-                // ==========================================
-                // 18. الملاحظات
-                // ==========================================
-
                 if (carData["NOTES"]) {
 
                     notesElement.textContent =
@@ -548,8 +492,10 @@
                     error
                 );
 
+
                 brandElement.textContent =
                     "تعذر تحميل البيانات";
+
 
                 modelElement.textContent =
                     "حاول تحديث الصفحة";
@@ -559,40 +505,40 @@
         }
 
 
-        // ==========================================
-        // 19. تنسيق الكيلومترات
-        // ==========================================
-
         function formatMileage(value) {
 
             if (!value) {
                 return "---";
             }
 
+
             const number =
                 Number(
-                    String(value).replace(/,/g, "")
+                    String(value)
+                        .replace(/,/g, "")
                 );
+
 
             if (Number.isNaN(number)) {
                 return value;
             }
+
 
             return number.toLocaleString("en-US");
 
         }
 
 
-        // ==========================================
-        // 20. حالة موعد الصيانة
-        // ==========================================
-
         function updateServiceStatus(dateText) {
 
             const serviceDate =
                 new Date(dateText);
 
+
             if (Number.isNaN(serviceDate.getTime())) {
+
+                nextServiceElement.textContent =
+                    "غير محدد";
 
                 serviceStatusElement.textContent =
                     "موعد الصيانة";
@@ -608,19 +554,51 @@
             const today =
                 new Date();
 
-            today.setHours(0, 0, 0, 0);
 
-            serviceDate.setHours(0, 0, 0, 0);
+            today.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            serviceDate.setHours(
+                0,
+                0,
+                0,
+                0
+            );
 
 
             const difference =
                 serviceDate - today;
+
 
             const days =
                 Math.round(
                     difference /
                     (1000 * 60 * 60 * 24)
                 );
+
+
+            // ==========================================
+            // تنسيق التاريخ بالعربية
+            // ==========================================
+
+            const formattedDate =
+                serviceDate.toLocaleDateString(
+                    "ar-DZ",
+                    {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+
+            nextServiceElement.textContent =
+                formattedDate;
 
 
             if (days < 0) {
@@ -650,7 +628,9 @@
             } else {
 
                 serviceStatusElement.textContent =
-                    "متبقي " + days + " يوم";
+                    "متبقي " +
+                    days +
+                    " يوم";
 
                 serviceBadgeElement.textContent =
                     "موعد قادم";
@@ -661,5 +641,8 @@
 
     </script>
 
+
 </body>
+
 </html>
+```
