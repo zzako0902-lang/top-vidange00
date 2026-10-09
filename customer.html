@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
+<!-- الجزء 01: إعداد الصفحة وربط ملفات التصميم -->
 <head>
 
     <meta charset="UTF-8">
@@ -18,6 +19,7 @@
 
 <body>
 
+    <!-- الجزء 02: رأس الصفحة وشعار TOP-VIDANGE -->
     <header class="client-header">
 
         <div class="header-brand">
@@ -46,6 +48,7 @@
     <main class="client-container">
 
 
+        <!-- الجزء 03: بطاقة تعريف السيارة ورقمها -->
         <section class="car-profile-card">
 
             <div class="car-meta-info">
@@ -92,6 +95,7 @@
         </section>
 
 
+        <!-- الجزء 04: نوع الزيت والفلاتر المسجلة حاليًا -->
         <section class="specs-selection-card">
 
 
@@ -144,6 +148,7 @@
 
         </section>
 
+        <!-- الجزء 05: العلامة التجارية للزيت الحالي -->
         <section class="oil-brand-card">
             <div class="oil-brand-icon">
                 <i class="fa-solid fa-droplet"></i>
@@ -155,6 +160,7 @@
         </section>
 
 
+        <!-- الجزء 06: الكيلومترات الحالية ونوع الزيت -->
         <section class="quick-status-grid">
 
 
@@ -210,6 +216,7 @@
         </section>
 
 
+        <!-- الجزء 07: موعد تغيير الزيت القادم -->
         <section class="next-visit-neon-card">
 
             <div class="neon-card-header">
@@ -252,6 +259,23 @@
         </section>
 
 
+
+        <!-- الجزء 08: سجل الصيانة التاريخي؛ تفاصيل كل عملية تفتح بالضغط -->
+        <section class="maintenance-history-section" aria-labelledby="history-title">
+            <button class="history-section-toggle" id="history-section-toggle" type="button" aria-expanded="true" aria-controls="maintenance-history-list">
+                <span class="history-heading-icon"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span>
+                <span class="history-heading-text">
+                    <strong id="history-title">سجل الصيانة</strong>
+                    <small id="history-count">سجل عمليات تغيير الزيت السابقة</small>
+                </span>
+                <i class="fa-solid fa-chevron-up history-section-chevron" id="history-section-chevron" aria-hidden="true"></i>
+            </button>
+            <div class="maintenance-history-list" id="maintenance-history-list">
+                <p class="history-state-message" id="history-state-message">جارٍ تحميل سجل الصيانة...</p>
+            </div>
+        </section>
+
+        <!-- الجزء 09: الملاحظات والتذييل -->
         <section class="client-notes-card">
 
             <div class="notes-card-title">
@@ -303,6 +327,7 @@
     </main>
 
 
+    <!-- الجزء 10: جلب البيانات والتفاعل وحساب الكيلومترات -->
     <script>
 
         const APPS_SCRIPT_URL =
@@ -361,6 +386,13 @@
         const remainingKmElement =
             document.getElementById("remaining-km");
 
+        // عناصر سجل الصيانة التاريخي
+        const historySectionToggle = document.getElementById("history-section-toggle");
+        const historySectionChevron = document.getElementById("history-section-chevron");
+        const historyListElement = document.getElementById("maintenance-history-list");
+        const historyStateElement = document.getElementById("history-state-message");
+        const historyCountElement = document.getElementById("history-count");
+
 
         if (!carId) {
 
@@ -369,6 +401,7 @@
 
             modelElement.textContent =
                 "لم يتم العثور على رقم السيارة";
+            showHistoryMessage("افتح رابط السيارة عبر رمز QR لعرض سجل الصيانة.");
 
         } else {
 
@@ -376,6 +409,7 @@
                 carId;
 
             loadCarData();
+            loadMaintenanceHistory();
 
         }
 
@@ -534,6 +568,145 @@
 
         }
 
+
+        // فتح وإغلاق قسم سجل الصيانة بالكامل
+        historySectionToggle.addEventListener("click", () => {
+            const isExpanded = historySectionToggle.getAttribute("aria-expanded") === "true";
+            historySectionToggle.setAttribute("aria-expanded", String(!isExpanded));
+            historyListElement.hidden = isExpanded;
+            historySectionChevron.classList.toggle("is-collapsed", isExpanded);
+        });
+
+        // الجزء 10A: تحميل سجل الصيانة من Apps Script.
+        // يتطلب هذا الجزء تحديث Apps Script لاحقًا لإرجاع JSON عند استخدام ?history=1&id=...
+        async function loadMaintenanceHistory() {
+            if (!carId) {
+                showHistoryMessage("تعذّر تحديد السيارة لعرض سجل الصيانة.");
+                return;
+            }
+
+            try {
+                const historyUrl = APPS_SCRIPT_URL + "?history=1&id=" + encodeURIComponent(carId);
+                const response = await fetch(historyUrl);
+                if (!response.ok) throw new Error("HTTP " + response.status);
+
+                const responseText = await response.text();
+                let payload;
+                try {
+                    payload = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error("الواجهة البرمجية لا تُرجع سجلًا تاريخيًا بصيغة JSON بعد.");
+                }
+
+                const records = Array.isArray(payload)
+                    ? payload
+                    : (payload.history || payload.records || payload.data || []);
+
+                if (!Array.isArray(records) || records.length === 0) {
+                    historyCountElement.textContent = "لا توجد عمليات صيانة مسجلة بعد";
+                    showHistoryMessage("لا يوجد سجل صيانة محفوظ لهذه السيارة حتى الآن.");
+                    return;
+                }
+
+                historyCountElement.textContent = records.length + " عملية صيانة";
+                renderMaintenanceHistory(records);
+            } catch (error) {
+                console.warn("Maintenance history is not available yet:", error);
+                historyCountElement.textContent = "سجل الصيانة";
+                showHistoryMessage("سيظهر السجل هنا بعد ربط سجل الصيانة التاريخي في Google Sheets.");
+            }
+        }
+
+        function showHistoryMessage(message) {
+            historyListElement.innerHTML = "";
+            const paragraph = document.createElement("p");
+            paragraph.className = "history-state-message";
+            paragraph.textContent = message;
+            historyListElement.appendChild(paragraph);
+        }
+
+        // بناء البطاقات باستخدام textContent لتجنب تفسير بيانات السجل كـ HTML
+        function renderMaintenanceHistory(records) {
+            historyListElement.innerHTML = "";
+
+            records.forEach((record, index) => {
+                const date = record.date || record.DATE || record.MAINTENANCE_DATE || record.maintenance_date || "تاريخ غير محدد";
+                const mileage = record.mileage || record.MILEAGE || record.km || record.KM || "غير محدد";
+                const oil = record.oil || record.OIL || "غير مسجل";
+                const oilBrand = record.oil_brand || record.OIL_BRAND || record.brand || "غير مسجل";
+                const filters = record.filters || record.FILTERS || "لم تسجل الفلاتر";
+                const notes = record.notes || record.NOTES || "لا توجد ملاحظات";
+
+                const card = document.createElement("article");
+                card.className = "history-record";
+                if (index === 0) card.classList.add("is-latest");
+
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "history-record-toggle";
+                button.setAttribute("aria-expanded", "false");
+
+                const dateIcon = document.createElement("i");
+                dateIcon.className = "fa-regular fa-calendar-days history-date-icon";
+                dateIcon.setAttribute("aria-hidden", "true");
+
+                const summary = document.createElement("span");
+                summary.className = "history-record-summary";
+                const dateText = document.createElement("strong");
+                dateText.textContent = date;
+                const mileageText = document.createElement("small");
+                mileageText.textContent = formatMileage(mileage) + " كم";
+                summary.append(dateText, mileageText);
+
+                const oilText = document.createElement("span");
+                oilText.className = "history-record-oil";
+                oilText.textContent = oil;
+
+                const chevron = document.createElement("i");
+                chevron.className = "fa-solid fa-chevron-down history-record-chevron";
+                chevron.setAttribute("aria-hidden", "true");
+                button.append(dateIcon, summary, oilText, chevron);
+
+                const details = document.createElement("div");
+                details.className = "history-record-details";
+                details.hidden = true;
+                addHistoryDetail(details, "نوع الزيت", oil, "fa-solid fa-droplet");
+                addHistoryDetail(details, "العلامة التجارية", oilBrand, "fa-solid fa-oil-can");
+                addHistoryDetail(details, "الفلاتر المستبدلة", filters, "fa-solid fa-gear");
+                addHistoryDetail(details, "الكيلومترات وقت الصيانة", formatMileage(mileage) + " كم", "fa-solid fa-gauge-high");
+                addHistoryDetail(details, "ملاحظات", notes, "fa-solid fa-note-sticky");
+
+                button.addEventListener("click", () => {
+                    const expanded = button.getAttribute("aria-expanded") === "true";
+                    button.setAttribute("aria-expanded", String(!expanded));
+                    details.hidden = expanded;
+                    card.classList.toggle("is-expanded", !expanded);
+                    chevron.classList.toggle("is-open", !expanded);
+                });
+
+                card.append(button, details);
+                historyListElement.appendChild(card);
+            });
+        }
+
+        function addHistoryDetail(container, label, value, iconClass) {
+            const row = document.createElement("div");
+            row.className = "history-detail-row";
+            const icon = document.createElement("i");
+            icon.className = iconClass + " history-detail-icon";
+            icon.setAttribute("aria-hidden", "true");
+            const textWrap = document.createElement("div");
+            textWrap.className = "history-detail-copy";
+            const title = document.createElement("span");
+            title.className = "history-detail-label";
+            title.textContent = label;
+            const valueText = document.createElement("strong");
+            valueText.className = "history-detail-value";
+            valueText.textContent = value || "غير مسجل";
+            textWrap.append(title, valueText);
+            row.append(icon, textWrap);
+            container.appendChild(row);
+        }
 
         function formatMileage(value) {
 
@@ -711,6 +884,3 @@
 </body>
 
 </html>
-
-
-
