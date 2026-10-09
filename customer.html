@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -228,7 +227,7 @@
                     </h2>
 
                     <p class="neon-countdown-text" id="service-status">
-                        ...
+                        الكيلومتر المستهدف للتغيير
                     </p>
 
                     <p class="remaining-km-text" id="remaining-km">
@@ -484,23 +483,27 @@
                     "لم يتم تسجيل الفلاتر";
 
 
-                if (carData["NEXT_SERVICE"]) {
+                const targetKmText = String(carData["NEXT_KM"] || "").replace(/,/g, "").trim();
+                const targetKm = Number(targetKmText);
 
-                    updateServiceStatus(
-                        carData["NEXT_SERVICE"]
-                    );
+                if (targetKmText && Number.isFinite(targetKm) && targetKm > 0) {
+                    nextServiceElement.textContent =
+                        formatMileage(targetKm) + " كم";
 
+                    serviceStatusElement.textContent =
+                        "الكيلومتر المستهدف للتغيير";
+
+                    serviceBadgeElement.textContent =
+                        "هدف الكيلومترات";
                 } else {
-
                     nextServiceElement.textContent =
                         "غير محدد";
 
                     serviceStatusElement.textContent =
-                        "لم يتم تحديد موعد الصيانة";
+                        "لم يتم تحديد كيلومتر التغيير";
 
                     serviceBadgeElement.textContent =
                         "غير محدد";
-
                 }
 
 
@@ -557,27 +560,25 @@
 
 
         function updateRemainingKm(currentMileageText, nextKmText) {
-            const currentMileage = Number(
-                String(currentMileageText || "").replace(/,/g, "").trim()
-            );
-            const nextKm = Number(
-                String(nextKmText || "").replace(/,/g, "").trim()
-            );
+            const currentText = String(currentMileageText || "").replace(/,/g, "").trim();
+            const targetText = String(nextKmText || "").replace(/,/g, "").trim();
+            const currentMileage = Number(currentText);
+            const targetKm = Number(targetText);
 
             if (
-                !currentMileageText ||
-                !nextKmText ||
+                !currentText ||
+                !targetText ||
                 !Number.isFinite(currentMileage) ||
-                !Number.isFinite(nextKm) ||
+                !Number.isFinite(targetKm) ||
                 currentMileage < 0 ||
-                nextKm <= 0
+                targetKm <= 0
             ) {
                 remainingKmElement.textContent =
-                    "لم يتم تحديد كيلومتر التغيير القادم";
+                    "لا يمكن حساب المتبقي: تحقق من العداد والكيلومتر المستهدف";
                 return;
             }
 
-            const remaining = nextKm - currentMileage;
+            const remaining = targetKm - currentMileage;
 
             if (remaining > 0) {
                 remainingKmElement.textContent =
@@ -585,7 +586,7 @@
                     " كم حتى موعد التغيير";
             } else if (remaining === 0) {
                 remainingKmElement.textContent =
-                    "حان موعد تغيير الزيت حسب الكيلومترات";
+                    "حان موعد تغيير الزيت الآن";
             } else {
                 remainingKmElement.textContent =
                     "تجاوزت موعد التغيير بـ " +
@@ -710,5 +711,6 @@
 </body>
 
 </html>
+
 
 
