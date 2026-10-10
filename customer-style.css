@@ -1,480 +1,702 @@
-/* إعدادات وتصفير الشاشة العامة للجوال */
+/* =====================================================
+   TOP-VIDANGE — customer-style.css
+   الجزء 01: المتغيرات والتصفير العام
+   ===================================================== */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
 }
 
 :root {
-    --client-bg: #000c18;
-    --client-card-bg: #00172d;
-    --client-accent: #007fff;
-    --client-neon-green: #00ffaa;
-    --client-neon-glow: rgba(0, 255, 170, 0.2);
-    --client-text-light: #ffffff;
-    --client-text-muted: #819ebb;
-    --client-border: #092e52;
+    --client-bg:#000c18;
+    --client-card-bg:#00172d;
+    --client-accent:#007fff;
+    --client-neon-green:#00ffaa;
+    --client-neon-glow:rgba(0,255,170,.2);
+    --client-text-light:#fff;
+    --client-text-muted:#819ebb;
+    --client-border:#092e52;
 }
 
 body {
-    background-color: var(--client-bg);
-    color: var(--client-text-light);
-    padding: 15px 10px 40px 10px;
-    direction: rtl;
-    min-height: 100vh;
+    background:var(--client-bg);
+    color:var(--client-text-light);
+    padding:15px 10px 40px;
+    direction:rtl;
+    min-height:100vh;
 }
 
-/* حاوية الجوال المركزية المحددة */
+/* الجزء 02: الحاوية والهيدر */
 .client-container {
-    max-width: 500px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    max-width:500px;
+    margin:0 auto;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
 }
 
-/* الهيدر العلوي وشعار المحل */
 .client-header {
-    max-width: 500px;
-    margin: 10px auto 15px auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--client-border);
-    padding-bottom: 12px;
+    max-width:500px;
+    margin:10px auto 15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--client-border);
+    padding-bottom:12px;
+    gap:10px;
 }
 
 .header-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    position:relative;
 }
 
 .client-drop-icon {
-    font-size: 28px;
-    color: #ffaa00;
-    filter: drop-shadow(0 0 6px #ffaa00);
+    font-size:28px;
+    color:#ffaa00;
+    filter:drop-shadow(0 0 6px #ffaa00);
 }
 
 .brand-titles h1 {
-    font-size: 18px;
-    font-weight: 800;
-    letter-spacing: 0.5px;
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:.5px;
 }
 
 .brand-titles p {
-    font-size: 10px;
-    color: var(--client-text-muted);
+    font-size:10px;
+    color:var(--client-text-muted);
 }
 
 .germany-skew-badge {
-    width: 35px;
-    height: 18px;
-    background: linear-gradient(to bottom, #000 33.3%, #dd0000 33.3%, #dd0000 66.6%, #ffce00 66.6%);
-    border-radius: 2px;
-    transform: skewX(-15px);
-    margin-right: 10px;
+    width:35px;
+    height:18px;
+    background:linear-gradient(to bottom,#000 33.3%,#dd0000 33.3%,#dd0000 66.6%,#ffce00 66.6%);
+    border-radius:2px;
+    transform:skewX(-15deg);
+    margin-right:10px;
 }
 
 .header-slogan {
-    font-size: 12px;
-    color: var(--client-text-muted);
-    font-weight: 500;
+    font-size:12px;
+    color:var(--client-text-muted);
+    font-weight:500;
 }
 
-/* كارت السيارة العلوي ورقم اللوحة المميز */
+/* الجزء 03: بطاقة السيارة وID */
 .car-profile-card {
-    background-color: var(--client-card-bg);
-    border: 1px solid var(--client-border);
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:12px;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
 }
 
 .car-meta-info {
-    display: flex;
-    flex-direction: column;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
 }
 
 .brand-label {
-    font-size: 13px;
-    color: var(--client-text-muted);
+    font-size:13px;
+    color:var(--client-text-muted);
 }
 
 .model-title {
-    font-size: 26px;
-    font-weight: bold;
-    margin: 2px 0 6px 0;
+    font-size:26px;
+    font-weight:bold;
+    margin:2px 0 6px;
+    overflow-wrap:anywhere;
 }
 
 .spec-row {
-    display: flex;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--client-text-muted);
+    display:flex;
+    gap:8px;
+    font-size:13px;
+    color:var(--client-text-muted);
+    flex-wrap:wrap;
 }
 
 .spec-row .divider {
-    color: var(--client-border);
+    color:var(--client-border);
 }
 
-/* صندوق رقم اللوحة المحاكي تماماً للصورة */
 .plate-number-box {
-    border: 1px solid var(--client-border);
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 10px 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    min-width: 120px;
+    border:1px solid var(--client-border);
+    background:rgba(0,0,0,.2);
+    border-radius:8px;
+    padding:10px 15px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    min-width:120px;
 }
 
 .plate-label {
-    font-size: 10px;
-    color: var(--client-text-muted);
-    margin-bottom: 4px;
+    font-size:10px;
+    color:var(--client-text-muted);
+    margin-bottom:4px;
 }
 
 .plate-digits {
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 1px;
+    font-size:16px;
+    font-weight:bold;
+    letter-spacing:1px;
+    overflow-wrap:anywhere;
 }
 
 .plate-icon {
-    position: absolute;
-    left: -12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
-    color: rgba(0, 127, 255, 0.15);
+    position:absolute;
+    left:8px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:24px;
+    color:rgba(0,127,255,.2);
 }
-/* تنسيق حقول الخيارات المغلقة (الفلاتر والزيوت) الموفرة للمساحة */
+
+/* الجزء 04: حقول نوع الزيت والفلاتر */
 .specs-selection-card {
-    background-color: var(--client-card-bg);
-    border: 1px solid var(--client-border);
-    border-radius: 12px;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:12px;
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    gap:15px;
 }
 
 .client-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
 
 .client-input-group label {
-    font-size: 13px;
-    color: var(--client-text-light);
-    font-weight: 500;
+    font-size:13px;
+    color:var(--client-text-light);
+    font-weight:500;
 }
 
 .client-input-group label i {
-    color: var(--client-text-muted);
-    margin-left: 5px;
+    color:var(--client-text-muted);
+    margin-left:5px;
 }
 
 .client-select-wrapper {
-    position: relative;
-    width: 100%;
+    position:relative;
+    width:100%;
 }
 
-/* تعديل خصائص القوائم المغلقة المنسدلة لتكون مريحة وأنيقة في الجوال */
 .client-select-wrapper select {
-    width: 100%;
-    background-color: var(--client-bg);
-    border: 1px solid var(--client-border);
-    border-radius: 6px;
-    color: var(--client-text-light);
-    padding: 12px 15px;
-    font-size: 14px;
-    outline: none;
-    appearance: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-    opacity: 0.9; /* جعلها واضحة ومقروءة */
+    width:100%;
+    background:var(--client-bg);
+    border:1px solid var(--client-border);
+    border-radius:6px;
+    color:var(--client-text-light);
+    padding:12px 15px;
+    font-size:14px;
+    outline:none;
+    appearance:none;
+    -webkit-appearance:none;
+    cursor:default;
+    opacity:.9;
 }
 
 .client-select-arrow {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--client-text-muted);
-    pointer-events: none;
-    font-size: 12px;
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--client-text-muted);
+    pointer-events:none;
+    font-size:12px;
 }
 
 .client-drop-inside {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #ffaa00;
-    font-size: 16px;
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#ffaa00;
+    font-size:16px;
 }
 
-/* شبكة كروت العداد والزيوت السريعة */
-.quick-status-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.status-square-card {
-    background-color: var(--client-card-bg);
-    border: 1px solid var(--client-border);
-    border-radius: 12px;
-    padding: 18px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-    overflow: hidden;
-}
-
-.status-card-icon {
-    font-size: 26px;
-    color: var(--client-accent);
-}
-
-.oil-yellow-icon {
-    color: #ffaa00;
-}
-
-.status-card-data {
-    display: flex;
-    flex-direction: column;
-}
-
-.status-title {
-    font-size: 11px;
-    color: var(--client-text-muted);
-    margin-bottom: 4px;
-}
-
-.status-value {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.status-value .unit {
-    font-size: 11px;
-    color: var(--client-text-muted);
-    font-weight: normal;
-}
-
-.status-subtext {
-    font-size: 10px;
-    color: var(--client-text-muted);
-    margin-top: 2px;
-}
-
-/* بطاقة موعد تغيير الزيت القادم المضيئة (إشعاع نيون أخضر ساحر) */
-.next-visit-neon-card {
-    background-color: rgba(0, 255, 170, 0.02);
-    border: 2px solid var(--client-neon-green);
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 0 15px var(--client-neon-glow);
-}
-
-.neon-card-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.neon-calendar-icon {
-    font-size: 32px;
-    color: var(--client-neon-green);
-}
-
-.neon-title-area h4 {
-    font-size: 12px;
-    color: var(--client-neon-green);
-    font-weight: 600;
-}
-
-.neon-date-value {
-    font-size: 22px;
-    font-weight: 800;
-    margin: 4px 0;
-    letter-spacing: 0.5px;
-}
-
-.neon-countdown-text {
-    font-size: 11px;
-    color: var(--client-text-muted);
-}
-
-.neon-badge-status {
-    background-color: rgba(0, 255, 170, 0.1);
-    color: var(--client-neon-green);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-/* صندوق الملاحظات والتوصيات */
-.client-notes-card {
-    background-color: var(--client-card-bg);
-    border: 1px solid var(--client-border);
-    border-radius: 12px;
-    padding: 15px 18px;
-}
-
-.notes-card-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-
-.notes-icon {
-    color: var(--client-accent);
-    font-size: 16px;
-}
-
-.notes-card-title h4 {
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.notes-content-text {
-    font-size: 12px;
-    color: var(--client-text-muted);
-    line-height: 1.6;
-}
-
-/* تذييل الصفحة وكلمة الشكر المائلة الأنيقة */
-.client-footer-area {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 10px;
-}
-
-.footer-scan-hint {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    max-width: 60%;
-}
-
-.footer-qr-icon {
-    font-size: 20px;
-    color: var(--client-text-muted);
-}
-
-.footer-scan-hint p {
-    font-size: 10px;
-    color: var(--client-text-muted);
-    line-height: 1.4;
-}
-
-.thank-you-badge {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.thank-text {
-    font-size: 16px;
-    font-weight: bold;
-    font-style: italic;
-    color: var(--client-text-light);
-}
-
-/* محاكاة القوس الأصفر المضيء أسفل كلمة شكراً لثقتكم */
-.yellow-underline-curve {
-    width: 80px;
-    height: 4px;
-    background-color: #ffaa00;
-    border-radius: 50%;
-    margin-top: 2px;
-    box-shadow: 0 0 6px #ffaa00;
-}
-/* إضافات خانة العلامة التجارية للزيت والكيلومترات المتبقية */
-
+/* الجزء 05: بطاقة العلامة التجارية للزيت */
 .oil-brand-card {
-    background-color: var(--client-card-bg);
-    border: 1px solid var(--client-border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    display: flex;
-    align-items: center;
-    gap: 13px;
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:12px;
+    padding:16px 18px;
+    display:flex;
+    align-items:center;
+    gap:13px;
 }
 
 .oil-brand-icon {
-    width: 42px;
-    height: 42px;
-    flex: 0 0 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    background: rgba(255, 170, 0, 0.12);
-    color: #ffaa00;
-    font-size: 21px;
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:10px;
+    background:rgba(255,170,0,.12);
+    color:#ffaa00;
+    font-size:21px;
 }
 
 .oil-brand-info {
-    min-width: 0;
+    min-width:0;
 }
 
 .oil-brand-label {
-    color: var(--client-text-muted);
-    font-size: 11px;
-    margin-bottom: 4px;
+    color:var(--client-text-muted);
+    font-size:11px;
+    margin-bottom:4px;
 }
 
 .oil-brand-info h3 {
-    color: var(--client-text-light);
-    font-size: 17px;
-    font-weight: 800;
-    overflow-wrap: anywhere;
+    color:var(--client-text-light);
+    font-size:17px;
+    font-weight:800;
+    overflow-wrap:anywhere;
+}
+
+/* الجزء 06: شبكة الكيلومترات ونوع الزيت */
+.quick-status-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.status-square-card {
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:12px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    position:relative;
+    overflow:hidden;
+}
+
+.status-card-icon {
+    font-size:26px;
+    color:var(--client-accent);
+}
+
+.oil-yellow-icon {
+    color:#ffaa00;
+}
+
+.status-card-data {
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+}
+
+.status-title {
+    font-size:11px;
+    color:var(--client-text-muted);
+    margin-bottom:4px;
+}
+
+.status-value {
+    font-size:16px;
+    font-weight:bold;
+    overflow-wrap:anywhere;
+}
+
+.status-value .unit {
+    font-size:11px;
+    color:var(--client-text-muted);
+    font-weight:normal;
+}
+
+.status-subtext {
+    font-size:10px;
+    color:var(--client-text-muted);
+    margin-top:2px;
+}
+
+/* الجزء 07: موعد تغيير الزيت القادم */
+.next-visit-neon-card {
+    background:rgba(0,255,170,.02);
+    border:2px solid var(--client-neon-green);
+    border-radius:12px;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    box-shadow:0 0 15px var(--client-neon-glow);
+}
+
+.neon-card-header {
+    display:flex;
+    align-items:center;
+    gap:15px;
+    min-width:0;
+}
+
+.neon-calendar-icon {
+    font-size:32px;
+    color:var(--client-neon-green);
+}
+
+.neon-title-area h4 {
+    font-size:12px;
+    color:var(--client-neon-green);
+    font-weight:600;
+}
+
+.neon-date-value {
+    font-size:22px;
+    font-weight:800;
+    margin:4px 0;
+    letter-spacing:.5px;
+}
+
+.neon-countdown-text {
+    font-size:11px;
+    color:var(--client-text-muted);
+}
+
+.neon-badge-status {
+    background:rgba(0,255,170,.1);
+    color:var(--client-neon-green);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
 }
 
 .remaining-km-text {
-    color: var(--client-neon-green);
-    font-size: 12px;
-    font-weight: 700;
-    margin-top: 7px;
-    line-height: 1.5;
+    color:var(--client-neon-green);
+    font-size:12px;
+    font-weight:700;
+    margin-top:7px;
+    line-height:1.5;
 }
 
-@media (max-width: 380px) {
-    .next-visit-neon-card {
-        gap: 8px;
-        padding: 14px;
-    }
+/* الجزء 08: سجل الصيانة التاريخي والبطاقات القابلة للفتح */
+.maintenance-history-section {
+    background:transparent;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    width:100%;
+    min-width:0;
+}
 
-    .neon-date-value {
-        font-size: 18px;
-    }
+.history-section-toggle {
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:right;
+    padding:16px;
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:12px;
+    color:var(--client-text-light);
+    cursor:pointer;
+}
 
-    .neon-badge-status {
-        padding: 5px 8px;
-        font-size: 10px;
-    }
+.history-heading-icon {
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    flex:0 0 42px;
+    color:var(--client-accent);
+    font-size:27px;
+}
+
+.history-heading-text {
+    display:flex;
+    flex:1;
+    min-width:0;
+    flex-direction:column;
+    gap:4px;
+}
+
+.history-heading-text strong {
+    font-size:19px;
+}
+
+.history-heading-text small {
+    font-size:11px;
+    color:var(--client-text-muted);
+}
+
+.history-section-chevron {
+    color:var(--client-accent);
+    transition:transform .15s ease;
+}
+
+.history-section-chevron.is-collapsed {
+    transform:rotate(180deg);
+}
+
+.maintenance-history-list {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    position:relative;
+    padding-right:0;
+}
+
+.maintenance-history-list[hidden] {
+    display:none;
+}
+
+.history-state-message {
+    padding:18px 14px;
+    text-align:center;
+    line-height:1.7;
+    color:var(--client-text-muted);
+    background:var(--client-card-bg);
+    border:1px dashed var(--client-border);
+    border-radius:12px;
+    font-size:12px;
+}
+
+.history-record {
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:13px;
+    overflow:hidden;
+    min-width:0;
+}
+
+.history-record.is-expanded,.history-record.is-latest {
+    border-color:var(--client-neon-green);
+    box-shadow:0 0 12px var(--client-neon-glow);
+}
+
+.history-record-toggle {
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 12px;
+    background:transparent;
+    border:0;
+    color:var(--client-text-light);
+    text-align:right;
+    cursor:pointer;
+    min-width:0;
+}
+
+.history-date-icon {
+    font-size:22px;
+    color:var(--client-accent);
+    flex:0 0 auto;
+}
+
+.history-record-summary {
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    flex:1;
+    min-width:0;
+}
+
+.history-record-summary strong {
+    font-size:14px;
+    font-variant-numeric:tabular-nums;
+}
+
+.history-record-summary small {
+    font-size:12px;
+    color:var(--client-text-muted);
+}
+
+.history-record-oil {
+    font-size:12px;
+    font-weight:700;
+    color:var(--client-text-light);
+    max-width:28%;
+    overflow-wrap:anywhere;
+}
+
+.history-record-chevron {
+    color:var(--client-accent);
+    padding:0 4px;
+    transition:transform .15s ease;
+}
+
+.history-record-chevron.is-open {
+    transform:rotate(180deg);
+}
+
+.history-record-details {
+    margin:0 10px 10px;
+    padding:12px;
+    background:rgba(0,0,0,.14);
+    border:1px solid var(--client-border);
+    border-radius:10px;
+}
+
+.history-record-details[hidden] {
+    display:none;
+}
+
+.history-detail-row {
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:10px 2px;
+    border-bottom:1px solid rgba(9,46,82,.9);
+}
+
+.history-detail-row:last-child {
+    border-bottom:0;
+}
+
+.history-detail-icon {
+    width:25px;
+    flex:0 0 25px;
+    text-align:center;
+    font-size:18px;
+    color:var(--client-accent);
+    margin-top:2px;
+}
+
+.history-detail-copy {
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    min-width:0;
+}
+
+.history-detail-label {
+    font-size:11px;
+    color:var(--client-text-muted);
+}
+
+.history-detail-value {
+    font-size:13px;
+    font-weight:600;
+    line-height:1.6;
+    overflow-wrap:anywhere;
+    white-space:pre-wrap;
+}
+
+/* الجزء 09: الملاحظات والتذييل */
+.client-notes-card {
+    background:var(--client-card-bg);
+    border:1px solid var(--client-border);
+    border-radius:12px;
+    padding:15px 18px;
+}
+
+.notes-card-title {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.notes-icon {
+    color:var(--client-accent);
+    font-size:16px;
+}
+
+.notes-card-title h4 {
+    font-size:13px;
+    font-weight:600;
+}
+
+.notes-content-text {
+    font-size:12px;
+    color:var(--client-text-muted);
+    line-height:1.6;
+    overflow-wrap:anywhere;
+}
+
+.client-footer-area {
+    margin-top:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 10px;
+    gap:10px;
+}
+
+.footer-scan-hint {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    max-width:60%;
+}
+
+.footer-qr-icon {
+    font-size:20px;
+    color:var(--client-text-muted);
+}
+
+.footer-scan-hint p {
+    font-size:10px;
+    color:var(--client-text-muted);
+    line-height:1.4;
+}
+
+.thank-you-badge {
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.thank-text {
+    font-size:16px;
+    font-weight:bold;
+    font-style:italic;
+    color:var(--client-text-light);
+}
+
+.yellow-underline-curve {
+    width:80px;
+    height:4px;
+    background:#ffaa00;
+    border-radius:50%;
+    margin-top:2px;
+    box-shadow:0 0 6px #ffaa00;
+}
+
+/* الجزء 10: ضبط التصميم على الهاتف والشاشات الصغيرة */
+@media(max-width:480px) {
+    body{padding:12px 10px 30px}.client-header{align-items:flex-start}.header-slogan{font-size:10px;
+    text-align:left}.car-profile-card{padding:15px;
+    gap:8px}.model-title{font-size:22px}.plate-number-box{min-width:105px;
+    padding:9px 10px}.quick-status-grid{gap:10px}.status-square-card{padding:13px 10px;
+    gap:8px}.status-card-icon{font-size:22px}.status-value{font-size:14px}.next-visit-neon-card{gap:8px;
+    padding:14px}.neon-card-header{gap:9px}.neon-calendar-icon{font-size:25px}.neon-date-value{font-size:18px}.neon-badge-status{padding:5px 8px;
+    font-size:10px}.history-section-toggle{padding:13px}.history-heading-text strong{font-size:17px}.history-record-toggle{gap:8px;
+    padding:12px 9px}.history-record-oil{font-size:11px;
+    max-width:25%}.history-record-details{margin:0 7px 7px;
+    padding:9px}.client-footer-area{padding:0 4px};
+}
+
+@media(max-width:360px) {
+    .client-header{flex-wrap:wrap}.header-slogan{width:100%;
+    text-align:right}.car-profile-card{flex-direction:column;
+    align-items:stretch}.plate-number-box{align-self:flex-start}.quick-status-grid{grid-template-columns:1fr}.next-visit-neon-card{flex-direction:column;
+    align-items:stretch}.neon-badge-status{align-self:flex-start}.history-record-oil{display:none}.footer-scan-hint{max-width:65%};
 }
