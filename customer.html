@@ -586,7 +586,7 @@
             }
 
             try {
-                const historyUrl = APPS_SCRIPT_URL + "?history=1&id=" + encodeURIComponent(carId);
+                const historyUrl = APPS_SCRIPT_URL + "?action=history&id=" + encodeURIComponent(carId);
                 const response = await fetch(historyUrl);
                 if (!response.ok) throw new Error("HTTP " + response.status);
 
