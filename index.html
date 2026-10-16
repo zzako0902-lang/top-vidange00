@@ -2,21 +2,4135 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOP-VIDANGE</title>
-</head>
-
-<body>
-
-<script>
-    const params = new URLSearchParams(window.location.search);
-    const carId = params.get("id");
-
-    if (carId) {
-        window.location.href = "customer.html?id=" + encodeURIComponent(carId);
-    } else {
-        document.body.innerHTML = "<h2>لم يتم تحديد رقم السيارة</h2>";
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>
+        TOP-VIDANGE - لوحة تحكم مدير المحل
+    </title>
+    <style>
+/* =========================================================
+   1. إعدادات وتصفير المتصفح العامة
+   ========================================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+/* =========================================================
+   2. ألوان وثوابت التصميم
+   ========================================================= */
+:root {
+    --bg-dark: #001222;
+    --card-bg: #001a30;
+    --accent-blue: #007fff;
+    --neon-cyan: #00e5ff;
+    --neon-green: #00ffaa;
+    --text-main: #ffffff;
+    --text-muted: #7fa1c3;
+    --border-color: #0c3153;
+}
+/* =========================================================
+   3. إعدادات جسم الصفحة
+   ========================================================= */
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    padding-bottom: 40px;
+    overflow-x: hidden;
+}
+/* =========================================================
+   4. الشريط العلوي - Navbar
+   ========================================================= */
+.main-header {
+    background-color: var(--card-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 30px;
+    border-bottom: 2px solid var(--border-color);
+}
+/* 4.1 توزيع عناصر الشريط العلوي والشعار */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.main-drop-icon {
+    font-size: 32px;
+    color: #ffaa00;
+    filter: drop-shadow(0 0 8px #ffaa00);
+}
+.logo-text h1 {
+    font-size: 22px;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+.logo-text p {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+/* 4.2 شارة علم ألمانيا */
+.germany-flag-badge {
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(
+        to bottom,
+        #000 33.3%,
+        #dd0000 33.3%,
+        #dd0000 66.6%,
+        #ffce00 66.6%
+    );
+    border-radius: 4px;
+    transform: skewX(-15deg);
+}
+/* 4.3 معلومات المستخدم */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.03);
+    padding: 6px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+}
+.user-profile i {
+    font-size: 20px;
+    color: var(--text-muted);
+}
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+.shop-name {
+    font-size: 12px;
+    font-weight: bold;
+}
+.user-role {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+.user-role i {
+    font-size: 10px;
+    color: var(--accent-blue);
+}
+/* =========================================================
+   5. تخطيط لوحة التحكم الرئيسية
+   ========================================================= */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 25px;
+    max-width: 1400px;
+    margin: 25px auto;
+    padding: 0 20px;
+}
+/* =========================================================
+   6. أقسام اللوحات الداكنة للمدخلات والمعاينة
+   ========================================================= */
+.data-entry-section,
+.qr-preview-section {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 25px;
+}
+/* =========================================================
+   7. عناوين الأقسام
+   ========================================================= */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+.section-title i {
+    font-size: 28px;
+    color: var(--accent-blue);
+}
+.section-title h2 {
+    font-size: 20px;
+}
+.section-title p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+/* =========================================================
+   8. شبكة المدخلات والاستمارة Form
+   ========================================================= */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+/* =========================================================
+   9. تنسيق مجموعات الإدخال والحقول
+   ========================================================= */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.input-group.full-width {
+    grid-column: span 2;
+    margin-top: 15px;
+}
+.input-group label {
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+.input-group label i {
+    color: var(--text-muted);
+    margin-left: 5px;
+}
+/* =========================================================
+   10. صناديق الخيارات والقوائم والحقول
+   ========================================================= */
+.select-wrapper,
+.date-input-wrapper,
+.gauge-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+select,
+input[type="number"],
+textarea {
+    width: 100%;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    padding: 12px 15px;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.3s;
+}
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+select:focus,
+input:focus,
+textarea:focus {
+    border-color: var(--accent-blue);
+}
+.select-arrow {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    font-size: 12px;
+}
+.brand-icon-preview,
+.oil-icon-preview {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--text-muted);
+}
+.input-inner-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-blue);
+}
+textarea {
+    resize: none;
+    height: 80px;
+}
+/* =========================================================
+   11. خانة البحث الخاصة بنوع السيارة
+   ========================================================= */
+.car-brand-search-wrapper {
+    position: relative;
+    width: 100%;
+}
+.car-brand-search-wrapper input {
+    width: 100%;
+    height: 43px;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    padding: 12px 42px 12px 15px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    direction: rtl;
+}
+.car-brand-search-wrapper input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.9;
+}
+.car-brand-search-wrapper input:focus {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(0, 127, 255, 0.08);
+}
+.car-brand-search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-blue);
+    font-size: 15px;
+    pointer-events: none;
+    z-index: 2;
+}
+/* =========================================================
+   12. قائمة اقتراحات أنواع السيارات
+   ========================================================= */
+.car-brand-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 230px;
+    overflow-y: auto;
+    background-color: var(--card-bg);
+    border: 1px solid var(--accent-blue);
+    border-radius: 6px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    z-index: 1000;
+}
+.car-brand-suggestion {
+    padding: 11px 15px;
+    color: var(--text-main);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+.car-brand-suggestion:hover {
+    background-color: rgba(0, 127, 255, 0.14);
+    color: var(--neon-cyan);
+}
+/* =========================================================
+   13. شريط التمرير الخاص بقائمة السيارات
+   ========================================================= */
+.car-brand-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+.car-brand-suggestions::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+    border-radius: 6px;
+}
+.car-brand-suggestions::-webkit-scrollbar-thumb {
+    background: var(--accent-blue);
+    border-radius: 6px;
+}
+.car-brand-suggestions::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan);
+}
+.car-brand-suggestions {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-blue) var(--bg-dark);
+}
+/* =========================================================
+   14. سجل التواريخ والصيانة داخل الاستمارة
+   ========================================================= */
+.history-box {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-dark);
+}
+.history-header {
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 14px;
+}
+.history-list {
+    max-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.history-list::-webkit-scrollbar {
+    display: none;
+}
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    font-size: 13px;
+    gap: 10px;
+    color: var(--text-muted);
+}
+.history-item.current {
+    background-color: rgba(0, 229, 255, 0.05);
+    color: var(--neon-cyan);
+}
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--neon-green);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--neon-green);
+}
+.label-status {
+    margin-right: auto;
+    background-color: rgba(0, 255, 170, 0.1);
+    color: var(--neon-green);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+}
+/* =========================================================
+   15. زر حفظ السيارة وإنشاء رمز QR
+   ========================================================= */
+.btn-submit-qr {
+    grid-column: span 2;
+    width: 100%;
+    background: linear-gradient(90deg, #0055ff, var(--accent-blue));
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 15px rgba(0, 127, 255, 0.3);
+    transition: transform 0.2s;
+}
+.btn-submit-qr:active {
+    transform: scale(0.98);
+}
+/* =========================================================
+   16. لوحة معاينة رمز QR والأزرار التابعة لها
+   ========================================================= */
+.qr-card-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.qr-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.qr-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+.badge-ready {
+    background-color: rgba(0, 255, 170, 0.1);
+    color: var(--neon-green);
+    border: 1px solid rgba(0, 255, 170, 0.2);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 15px;
+}
+.qr-subtext {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+/* =========================================================
+   17. صندوق استعراض رمز QR
+   ========================================================= */
+.qr-display-box {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.qr-border-mock {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 127, 255, 0.2);
+}
+.qr-image-placeholder {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.qr-image-placeholder img {
+    width: 100%;
+    height: 100%;
+}
+/* =========================================================
+   18. قطرة الزيت في منتصف رمز QR
+   ========================================================= */
+.qr-center-logo {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background-color: var(--bg-dark);
+    border: 3px solid white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.qr-center-logo i {
+    color: #ffaa00;
+    font-size: 20px;
+}
+/* =========================================================
+   19. أزرار العمليات والتحكم أسفل رمز QR
+   ========================================================= */
+.qr-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.btn-action {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: none;
+}
+.btn-print {
+    background-color: rgba(0, 127, 255, 0.1);
+    color: white;
+    border: 1px solid var(--accent-blue);
+}
+.btn-download {
+    background-color: var(--accent-blue);
+    color: white;
+}
+/* =========================================================
+   20. صندوق إشعار النجاح
+   ========================================================= */
+.success-status-box {
+    background-color: rgba(0, 255, 170, 0.03);
+    border: 1px solid rgba(0, 255, 170, 0.15);
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+.success-check-icon {
+    font-size: 20px;
+    color: var(--neon-green);
+    margin-top: 2px;
+}
+.success-text h4 {
+    font-size: 13px;
+    color: var(--neon-green);
+}
+.success-text p {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+/* =========================================================
+   21. بطاقة ملخص السيارة
+   ========================================================= */
+.car-summary-badge {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+.badge-right-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.car-icon-circle {
+    width: 36px;
+    height: 36px;
+    background-color: rgba(0, 127, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--accent-blue);
+}
+.car-badge-meta h4 {
+    font-size: 14px;
+}
+.car-badge-meta p {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+.car-badge-meta p span {
+    color: var(--border-color);
+    margin: 0 4px;
+}
+/* =========================================================
+   22. علم ألمانيا الصغير أسفل بطاقة السيارة
+   ========================================================= */
+.germany-small-flag-end {
+    width: 35px;
+    height: 18px;
+    background: linear-gradient(
+        to bottom,
+        #000 33.3%,
+        #dd0000 33.3%,
+        #dd0000 66.6%,
+        #ffce00 66.6%
+    );
+    border-radius: 2px;
+    transform: skewX(-10deg);
+}
+/* =========================================================
+   23. شريط الحالة السفلي
+   ========================================================= */
+.status-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-dark);
+    border-top: 1px solid var(--border-color);
+    padding: 6px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    z-index: 100;
+}
+.status-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* =========================================================
+   24. تنسيق حقول التاريخ
+   ========================================================= */
+input[type="date"] {
+    width: 100%;
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-main);
+    padding: 12px 15px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(175deg);
+    cursor: pointer;
+}
+/* =========================================================
+   25. تحديث واجهة بيانات السيارات - التصميم الأزرق الجديد
+   يحافظ على البنية والوظائف الحالية ويحدّث المظهر فقط.
+   ========================================================= */
+#car-records-view {
+    color: #f5f8ff;
+}
+#car-records-view .section-title {
+    color: #f5f8ff;
+    border-right: 5px solid #08a9ff;
+    padding-right: 12px;
+    margin-bottom: 18px;
+}
+#tv-functional-records {
+    padding: 18px;
+    border: 1px solid rgba(18, 103, 255, .65);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(3, 36, 91, .96), rgba(0, 12, 37, .98));
+    box-shadow: inset 0 0 28px rgba(0, 98, 255, .12), 0 8px 28px rgba(0, 0, 0, .22);
+}
+#tv-record-search {
+    min-height: 52px;
+    border: 1px solid #168cff !important;
+    border-radius: 11px !important;
+    background: linear-gradient(90deg, #061d42, #06132e) !important;
+    box-shadow: inset 0 0 0 1px rgba(0, 183, 255, .08);
+    font-size: 16px;
+}
+#tv-record-search:focus {
+    outline: none;
+    border-color: #00c8ff !important;
+    box-shadow: 0 0 0 3px rgba(0, 174, 255, .15), 0 0 18px rgba(0, 174, 255, .12);
+}
+#tv-record-search-button,
+#tv-edit-car {
+    background: linear-gradient(105deg, #078bff, #0757ff) !important;
+    border: 1px solid #08baff !important;
+    border-radius: 11px !important;
+    box-shadow: 0 0 14px rgba(0, 142, 255, .22), inset 0 1px 0 rgba(255, 255, 255, .2);
+    transition: filter .15s ease, transform .15s ease;
+}
+#tv-record-search-button:hover,
+#tv-edit-car:hover {
+    filter: brightness(1.12);
+}
+#tv-record-refresh {
+    border: 1px solid #1874d9 !important;
+    border-radius: 10px !important;
+    background: #071b3a !important;
+}
+#tv-record-status {
+    padding: 5px 2px 12px;
+}
+#tv-record-results > div[style*="grid-template-columns"] button {
+    border-color: #174b9d !important;
+    border-radius: 10px !important;
+    background: linear-gradient(140deg, #061c43, #062b62) !important;
+    box-shadow: inset 0 0 16px rgba(0, 116, 255, .08);
+}
+#tv-record-detail > div[style*="grid-template-columns"]:first-child {
+    gap: 10px !important;
+}
+#tv-record-detail > div[style*="grid-template-columns"]:first-child > div {
+    border: 1px solid #1269d9 !important;
+    border-radius: 11px !important;
+    background: linear-gradient(145deg, #073a87, #061c48) !important;
+    padding: 16px 18px !important;
+}
+#tv-record-detail > div[style*="grid-template-columns"]:first-child h3 {
+    color: #f8fbff;
+    font-size: 19px;
+}
+#tv-record-detail > div[style*="grid-template-columns"]:nth-child(2) {
+    grid-template-columns: minmax(0, 1.5fr) minmax(190px, .8fr) !important;
+    gap: 14px !important;
+    align-items: stretch !important;
+}
+#tv-record-detail > div[style*="grid-template-columns"]:nth-child(2) > div {
+    border: 1px solid #1769d8 !important;
+    border-radius: 12px !important;
+    background: linear-gradient(150deg, #061b40, #04132e) !important;
+    box-shadow: inset 0 0 22px rgba(0, 91, 255, .08);
+}
+#tv-record-detail > div[style*="grid-template-columns"]:nth-child(2) h3 {
+    color: #f5f8ff;
+    font-size: 18px !important;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(26, 113, 224, .3);
+}
+#tv-detail-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 10px 18px !important;
+}
+#tv-detail-fields > div {
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid rgba(25, 104, 208, .72);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(5, 38, 85, .8), rgba(3, 21, 52, .8));
+    text-align: right;
+}
+#tv-detail-fields > div small {
+    display: block;
+    color: #b8d8ff !important;
+    font-size: 13px !important;
+    line-height: 1.6;
+}
+#tv-detail-fields > div p {
+    color: #f8fbff;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.55;
+}
+#tv-detail-qr {
+    image-rendering: pixelated;
+}
+#tv-record-detail > div[style*="grid-template-columns"]:nth-child(2) > div:last-child > div {
+    border-radius: 9px !important;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 0 22px rgba(0, 149, 255, .12);
+}
+#tv-open-customer-page {
+    border-radius: 8px !important;
+    background: rgba(0, 125, 255, .16) !important;
+}
+#tv-record-detail > div[style*="margin-top:22px"] {
+    border: 1px solid #1769d8 !important;
+    border-radius: 12px !important;
+    background: linear-gradient(145deg, #061b40, #04132e) !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+#tv-record-detail > div[style*="margin-top:22px"] > div:first-child {
+    margin: 0 !important;
+    padding: 16px 18px;
+    background: linear-gradient(100deg, #063f91, #06275f);
+    border-bottom: 1px solid #1769d8;
+}
+#tv-record-detail table {
+    min-width: 700px !important;
+    background: rgba(2, 18, 45, .55);
+}
+#tv-record-detail table thead tr {
+    background: #06285b;
+    color: #c8e0ff !important;
+}
+#tv-record-detail table th,
+#tv-record-detail table td {
+    border-left: 1px solid rgba(30, 103, 196, .4);
+    border-bottom: 1px solid rgba(30, 103, 196, .4);
+    padding: 11px 10px !important;
+}
+#tv-record-detail table tbody tr:nth-child(even) {
+    background: rgba(11, 57, 113, .28);
+}
+#tv-record-detail table tbody tr:hover {
+    background: rgba(0, 132, 255, .12);
+}
+@media (max-width: 850px) {
+    #tv-functional-records { padding: 12px; }
+    #tv-record-detail > div[style*="grid-template-columns"]:nth-child(2) {
+        grid-template-columns: 1fr !important;
     }
+    #tv-detail-fields { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 520px) {
+    #tv-detail-fields { grid-template-columns: 1fr !important; }
+    #tv-functional-records { padding: 9px; }
+    #tv-record-search { font-size: 14px; }
+}
+/* =========================================================
+   TOP-VIDANGE: تنظيم البحث وإخفاء عناصر الازدحام
+   ========================================================= */
+/* إخفاء زر إعادة تحميل القائمة؛ تبقى خانة البحث وزر البحث والحذف */
+#tv-record-reload {
+    display: none !important;
+}
+/* إخفاء كروت نتائج البحث المتعددة، مع إبقاء مساحة معلومات السيارة */
+#tv-record-results > div[style*="grid-template-columns"] {
+    display: none !important;
+}
+/* منع تداخل عناصر البحث على الشاشات الضيقة */
+#tv-functional-records > div,
+#car-records-view #tv-functional-records > div {
+    min-width: 0;
+}
+#tv-functional-records input,
+#tv-record-search {
+    min-width: 0 !important;
+    flex: 1 1 280px;
+}
+#tv-record-search-button {
+    flex: 0 0 auto;
+    order: 3;
+}
+#tv-record-refresh {
+    flex: 0 0 54px;
+    order: 1;
+}
+@media (max-width: 620px) {
+    #tv-functional-records > div {
+        gap: 8px !important;
+    }
+    #tv-record-search-button {
+        min-width: 90px !important;
+        padding: 12px 14px !important;
+    }
+}
+/* إصلاح ترتيب بطاقة بيانات السيارة لتطابق التصميم المرجعي */
+#tv-functional-records .tv-car-info-grid {
+    direction: ltr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 190px;
+    align-items: center;
+}
+#tv-functional-records #tv-detail-fields-left,
+#tv-functional-records #tv-detail-fields-right {
+    direction: rtl;
+    min-width: 0;
+}
+#tv-functional-records #tv-detail-fields-left > div:nth-child(2n),
+#tv-functional-records #tv-detail-fields-right > div:nth-child(2n) {
+    min-width: 0;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+}
+@media (max-width: 900px) {
+    #tv-functional-records .tv-car-info-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        direction: rtl;
+    }
+}
+/* =========================================================
+   TOP-VIDANGE — واجهة بيانات السيارة النهائية
+   ========================================================= */
+#car-records-view {
+    grid-column: 2 / 4;
+    min-width: 0;
+}
+.cars-sidebar-item.active {
+    background: linear-gradient(105deg, #087dff, #0757f4) !important;
+    border-color: #09baff !important;
+    color: #fff !important;
+    box-shadow: 0 0 16px rgba(0, 122, 255, .42), inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+.cars-sidebar-item.active i { color: #fff !important; }
+#tv-functional-records {
+    padding: 14px;
+    border: 1px solid rgba(18, 103, 255, .65);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(3, 36, 91, .96), rgba(0, 12, 37, .98));
+    box-shadow: inset 0 0 28px rgba(0, 98, 255, .12), 0 8px 28px rgba(0, 0, 0, .22);
+    min-width: 0;
+}
+#tv-functional-records .tv-search-panel {
+    background: linear-gradient(135deg, #061a3d, #082a69);
+    border: 1px solid #124ca8;
+    border-radius: 13px;
+    padding: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 0 22px rgba(0,94,255,.12);
+}
+#tv-functional-records .tv-search-title {
+    font-size: 25px;
+    line-height: 1.35;
+    margin: 0 0 2px;
+    color: #f4f8ff;
+    border-right: 6px solid #12a9ff;
+    padding-right: 12px;
+}
+#tv-functional-records .tv-search-subtitle {
+    margin: 0 0 10px 18px;
+    color: #d6e6ff;
+    padding-right: 12px;
+}
+#tv-functional-records .tv-search-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 9px;
+    background: #061735;
+    border: 1px solid #1555a8;
+    border-radius: 12px;
+    min-width: 0;
+}
+#tv-functional-records .tv-delete-button,
+#tv-functional-records .tv-search-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    min-height: 52px;
+    padding: 12px 18px;
+    border-radius: 9px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter .15s ease, transform .15s ease;
+}
+#tv-functional-records .tv-delete-button {
+    border: 1px solid #ff6b82;
+    background: linear-gradient(135deg, #ff344f, #a90020);
+    box-shadow: 0 0 12px rgba(255, 40, 75, .25), inset 0 1px 0 rgba(255,255,255,.18);
+}
+#tv-functional-records .tv-search-button {
+    min-width: 145px;
+    border: 1px solid #15aaff;
+    background: linear-gradient(135deg, #079eff, #0064ff);
+    box-shadow: 0 0 12px rgba(0, 115, 255, .24), inset 0 1px 0 rgba(255,255,255,.18);
+}
+#tv-functional-records .tv-search-input-wrap {
+    position: relative;
+    flex: 1 1 300px;
+    min-width: 0;
+}
+#tv-functional-records .tv-search-car-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e4f2ff;
+    font-size: 20px;
+    pointer-events: none;
+}
+#tv-functional-records #tv-record-search {
+    width: 100%;
+    min-width: 0;
+    min-height: 52px;
+    /* أيقونة السيارة على اليسار والنص يبدأ بعدها دون تداخل */
+    padding: 13px 14px 13px 50px;
+    border: 1px solid #168cff !important;
+    border-radius: 10px !important;
+    background: linear-gradient(90deg, #061d42, #06132e) !important;
+    color: #fff;
+    font-size: 16px;
+    direction: ltr;
+    text-align: left;
+    box-shadow: inset 0 0 0 1px rgba(0, 183, 255, .08);
+}
+#tv-functional-records #tv-record-search:focus {
+    outline: none;
+    border-color: #00c8ff !important;
+    box-shadow: 0 0 0 3px rgba(0,174,255,.15), 0 0 18px rgba(0,174,255,.12);
+}
+#tv-functional-records #tv-record-status {
+    color: #a9c9f5;
+    font-size: 12px;
+    margin: 8px 2px 0;
+    padding: 0;
+}
+#tv-functional-records #tv-record-status.is-error { color: #ff8998; }
+#tv-functional-records button:disabled { opacity: .65; cursor: wait; }
+#tv-functional-records button:hover:not(:disabled) { filter: brightness(1.1); }
+#tv-functional-records .tv-detail-card,
+#tv-functional-records .tv-history-card {
+    border: 1px solid #1253ac;
+    border-radius: 13px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #061a3d, #071b3c);
+    box-shadow: 0 0 22px rgba(0,94,255,.08);
+}
+#tv-functional-records .tv-detail-heading,
+#tv-functional-records .tv-history-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 17px;
+    background: linear-gradient(90deg, #073d91, #0755bc);
+    border-bottom: 1px solid #1763c6;
+    color: #f4f8ff;
+    font-size: 19px;
+    font-weight: 700;
+}
+#tv-functional-records .tv-detail-heading i,
+#tv-functional-records .tv-history-heading i { color: #14b9ff; margin-left: 8px; }
+#tv-functional-records .tv-car-info-grid {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr) 190px;
+    gap: 15px;
+    padding: 13px;
+    align-items: center;
+    direction: ltr;
+}
+#tv-functional-records .tv-detail-fields {
+    display: grid;
+    grid-template-columns: minmax(100px,auto) minmax(100px,1fr);
+    gap: 8px 12px;
+    align-content: start;
+    min-width: 0;
+    direction: rtl;
+}
+#tv-functional-records .tv-field-label {
+    align-self: center;
+    color: #d9eaff;
+    font-size: 14px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+#tv-functional-records .tv-field-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    min-height: 45px;
+    padding: 10px 12px;
+    background: linear-gradient(135deg, #071c3e, #092754);
+    border: 1px solid #14529d;
+    border-radius: 8px;
+    color: #f5f9ff;
+    font-size: 15px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+#tv-functional-records .tv-field-value i { color: #7dbdff; flex: 0 0 auto; }
+#tv-functional-records .tv-field-value .fa-oil-can { color: #ffcc00; }
+#tv-functional-records .tv-field-value .fa-droplet { color: #00ee68; }
+#tv-functional-records .tv-field-value .fa-calendar-days,
+#tv-functional-records .tv-field-value .fa-calendar { color: #00e8a0; }
+#tv-functional-records .tv-qr-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    padding: 3px;
+    text-align: center;
+}
+#tv-functional-records .tv-qr-frame {
+    width: 158px;
+    height: 158px;
+    max-width: 100%;
+    padding: 5px;
+    background: #fff;
+    border-radius: 8px;
+}
+#tv-functional-records #tv-detail-qr { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+#tv-functional-records #tv-detail-qr-id { margin: 8px 0; color: #d7e7ff; font-size: 13px; }
+#tv-functional-records #tv-open-customer-page {
+    padding: 8px 11px;
+    border: 1px solid #159cff;
+    border-radius: 7px;
+    color: #eaf6ff;
+    background: rgba(0,127,255,.16);
+    cursor: pointer;
+}
+#tv-functional-records #tv-edit-car {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    margin: 11px 0 15px;
+    padding: 15px;
+    background: linear-gradient(100deg,#008dff,#0058ff);
+    color: white;
+    border: 1px solid #19b8ff;
+    border-radius: 12px;
+    box-shadow: 0 0 18px rgba(0,145,255,.25);
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+}
+#tv-functional-records #tv-edit-car i { font-size: 26px; }
+#tv-functional-records .tv-history-heading { border-bottom: 1px solid #1763c6; }
+#tv-functional-records .tv-history-heading > span:last-child { font-size: 12px; font-weight: 400; color: #c8e1ff; }
+/* الجزء 26: سجل تغييرات الزيت بارتفاع ثابت وشريط تمرير داخلي */
+#tv-functional-records .tv-history-scroll {
+    max-height: 300px;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #168cff #061b40;
+}
+#tv-functional-records .tv-history-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+#tv-functional-records .tv-history-scroll::-webkit-scrollbar-track { background: #061b40; border-radius: 8px; }
+#tv-functional-records .tv-history-scroll::-webkit-scrollbar-thumb { background: #168cff; border-radius: 8px; }
+#tv-functional-records .tv-history-scroll::-webkit-scrollbar-thumb:hover { background: #00c8ff; }
+#tv-functional-records .tv-history-table thead { position: sticky; top: 0; z-index: 2; }
+#tv-functional-records .tv-history-table th { background: #082858; }
+#tv-functional-records .tv-history-table { width: 100%; min-width: 700px; border-collapse: collapse; text-align: right; color: #eef6ff; background: rgba(2,18,45,.55); }
+#tv-functional-records .tv-history-table thead tr { color: #d4e7ff; background: #082858; }
+#tv-functional-records .tv-history-table th,
+#tv-functional-records .tv-history-table td { padding: 10px 9px; border-left: 1px solid rgba(30,103,196,.4); border-bottom: 1px solid rgba(30,103,196,.4); }
+#tv-functional-records .tv-history-table tbody tr:nth-child(even) { background: rgba(11,57,113,.28); }
+#tv-functional-records .tv-history-table tbody tr:hover { background: rgba(0,132,255,.12); }
+#tv-functional-records .tv-history-table td { text-align: center; }
+#tv-functional-records .tv-table-message { padding: 22px 8px; text-align: center; color: #b5d2fa; }
+#tv-functional-records .tv-table-message.is-error { color: #ff7b88; }
+#tv-functional-records .tv-results-meta { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px; color:var(--text-muted); font-size:12px; }
+#tv-functional-records .tv-results-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+#tv-functional-records .tv-results-grid button { display:flex; flex-direction:column; gap:5px; text-align:right; padding:13px; background:linear-gradient(140deg,#061c43,#062b62); border:1px solid #174b9d; border-radius:8px; color:#fff; cursor:pointer; }
+#tv-functional-records .tv-results-grid small { color:var(--text-muted); }
+@media (max-width: 1100px) {
+    #car-records-view { grid-column: 2 / 4; }
+    #tv-functional-records .tv-car-info-grid { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    #tv-functional-records .tv-qr-column { grid-column:1 / -1; }
+}
+@media (max-width: 750px) {
+    #car-records-view { grid-column: 1 / -1; }
+    #tv-functional-records { padding: 10px; }
+    #tv-functional-records .tv-search-title { font-size: 21px; }
+    #tv-functional-records .tv-car-info-grid { grid-template-columns:minmax(0,1fr); direction:rtl; }
+    #tv-functional-records .tv-detail-fields { grid-template-columns:minmax(95px,auto) minmax(0,1fr); }
+    #tv-functional-records .tv-delete-button,
+    #tv-functional-records .tv-search-button { padding: 11px 12px; font-size: 14px; }
+    #tv-functional-records .tv-search-button { min-width: 95px; }
+}
+@media (min-width: 751px) and (max-width: 1100px) {
+    #car-records-view { grid-column: 2 / 3 !important; }
+}
+/* إصلاح نهائي: لا تظهر بطاقات نتائج أسفل شريط البحث */
+#tv-functional-records #tv-record-results,
+#tv-functional-records #tv-record-list { display: none !important; }
+</style>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+    <!-- =====================================================
+         تنسيق البحث الذكي لنوع السيارة
+    ====================================================== -->
+    <style>
+        .car-brand-search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .car-brand-search-wrapper input {
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .car-brand-search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #4d8dff;
+            font-size: 16px;
+        }
+        .car-brand-suggestions {
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            left: 0;
+            display: none;
+            max-height: 230px;
+            overflow-y: auto;
+            background: #101a35;
+            border: 1px solid rgba(45, 110, 255, 0.8);
+            border-radius: 10px;
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.45),
+                0 0 15px rgba(0, 80, 255, 0.12);
+            z-index: 1000;
+        }
+        .car-brand-suggestion {
+            padding: 13px 16px;
+            color: #ffffff;
+            font-size: 15px;
+            cursor: pointer;
+            transition:
+                background 0.15s ease,
+                color 0.15s ease;
+        }
+        .car-brand-suggestion:hover,
+        .car-brand-suggestion.active {
+            background: rgba(20, 90, 255, 0.25);
+            color: #ffffff;
+        }
+        .car-brand-suggestions::-webkit-scrollbar {
+            width: 7px;
+        }
+        .car-brand-suggestions::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+        }
+        .car-brand-suggestions::-webkit-scrollbar-thumb {
+            background: rgba(55, 125, 255, 0.7);
+            border-radius: 10px;
+        }
+        .car-brand-suggestions::-webkit-scrollbar-thumb:hover {
+            background: rgba(55, 125, 255, 0.95);
+        }
+        /* =====================================================
+           ترتيب الواجهة
+        ====================================================== */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns:
+                190px
+                minmax(0, 1.6fr)
+                minmax(320px, 1fr);
+            grid-template-areas:
+                "sidebar entry qr";
+            gap: 25px;
+            max-width: 1600px;
+            margin: 25px auto;
+            padding: 0 20px;
+            align-items: stretch;
+        }
+        /* =====================================================
+           القائمة الجانبية
+        ====================================================== */
+        .cars-sidebar {
+            grid-area: sidebar;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px 14px;
+            height: fit-content;
+            min-height: 245px;
+        }
+        .cars-sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 5px 6px 16px;
+            border-bottom:
+                1px solid var(--border-color);
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .cars-sidebar-title i {
+            color: var(--accent-blue);
+            font-size: 18px;
+        }
+        .cars-sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .cars-sidebar-item {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 11px;
+            border:
+                1px solid transparent;
+            border-radius: 7px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: right;
+            transition:
+                background-color 0.2s ease,
+                border-color 0.2s ease,
+                color 0.2s ease;
+        }
+        .cars-sidebar-item i {
+            width: 18px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+        .cars-sidebar-item:hover {
+            background-color:
+                rgba(0, 127, 255, 0.07);
+            color: var(--text-main);
+        }
+        .cars-sidebar-item:hover i {
+            color: var(--accent-blue);
+        }
+        /* الزر النشط */
+        .cars-sidebar-item.active {
+            background-color:
+                rgba(0, 127, 255, 0.13);
+            border-color:
+                var(--accent-blue);
+            color: var(--text-main);
+            box-shadow:
+                inset 3px 0 0 var(--accent-blue),
+                0 0 12px rgba(0, 127, 255, 0.08);
+        }
+        .cars-sidebar-item.active i {
+            color: var(--accent-blue);
+        }
+        .active-dot {
+            width: 6px;
+            height: 6px;
+            margin-right: auto;
+            background-color:
+                var(--accent-blue);
+            border-radius: 50%;
+            box-shadow:
+                0 0 7px var(--accent-blue);
+        }
+        .data-entry-section {
+            grid-area: entry;
+            min-width: 0;
+        }
+        .qr-preview-section {
+            grid-area: qr;
+            min-width: 0;
+        }
+        /* =====================================================
+           ضبط العمودين الداخليين بنفس القياس
+        ====================================================== */
+        .form-grid {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1fr)
+                minmax(0, 1fr);
+            column-gap: 20px;
+            align-items: start;
+        }
+        .form-column {
+            display: grid;
+            grid-template-rows:
+                repeat(5, auto);
+            gap: 18px;
+            min-width: 0;
+        }
+        .input-group {
+            width: 100%;
+            min-width: 0;
+        }
+        /* =====================================================
+           خانة الكيلومتراج القادم
+        ====================================================== */
+        #next-visit-km {
+            box-sizing: border-box;
+            min-width: 0;
+            max-width: 100%;
+            width: 100%;
+            background-color:
+                var(--bg-dark);
+            border:
+                1px solid var(--border-color);
+            border-radius: 6px;
+            color:
+                var(--text-main);
+            padding:
+                12px 15px;
+            font-size: 14px;
+            outline: none;
+            transition:
+                border 0.3s;
+            direction: ltr;
+            text-align: right;
+        }
+        #next-visit-km:focus {
+            border-color:
+                var(--accent-blue);
+        }
+        /* =====================================================
+           تاريخ الصيانة
+        ====================================================== */
+        #maintenance-date {
+            width: 100%;
+            background-color:
+                var(--bg-dark);
+            border:
+                1px solid var(--border-color);
+            border-radius: 6px;
+            color:
+                var(--text-main);
+            padding:
+                12px 15px;
+            font-size: 14px;
+            outline: none;
+            transition:
+                border 0.3s;
+            direction: ltr;
+            text-align: right;
+        }
+        #maintenance-date:focus {
+            border-color:
+                var(--accent-blue);
+        }
+        /* =====================================================
+           إزالة أسهم الكيلومترات
+        ====================================================== */
+        #current-km::-webkit-inner-spin-button,
+        #current-km::-webkit-outer-spin-button,
+        #next-visit-km::-webkit-inner-spin-button,
+        #next-visit-km::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        #current-km,
+        #next-visit-km {
+            -moz-appearance: textfield;
+        }
+        /* =====================================================
+           تجاوب الشاشة
+        ====================================================== */
+        @media (max-width: 1100px) {
+            .dashboard-container {
+                grid-template-columns:
+                    175px
+                    minmax(0, 1fr);
+                grid-template-areas:
+                    "sidebar entry"
+                    "sidebar qr";
+            }
+        }
+        @media (max-width: 750px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "sidebar"
+                    "entry"
+                    "qr";
+            }
+            .cars-sidebar {
+                min-height: auto;
+            }
+            .cars-sidebar-menu {
+                flex-direction: row;
+            }
+            .cars-sidebar-item {
+                justify-content: center;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-column {
+                grid-template-rows: none;
+            }
+        }
+    /* =====================================================
+       الجزء 26: نافذة تأكيد الحذف المتناسقة مع الواجهة
+       ===================================================== */
+    #tv-functional-records .tv-confirm-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(0, 7, 24, .78);
+        backdrop-filter: blur(5px);
+    }
+    #tv-functional-records .tv-confirm-overlay[hidden] { display: none !important; }
+    #tv-functional-records .tv-confirm-dialog {
+        width: min(100%, 440px);
+        padding: 26px;
+        text-align: center;
+        color: #f4f8ff;
+        background: linear-gradient(145deg, #082858, #03132d 78%);
+        border: 1px solid #168cff;
+        border-radius: 18px;
+        box-shadow: 0 0 0 1px rgba(0, 190, 255, .12), 0 18px 60px rgba(0, 0, 0, .55), 0 0 30px rgba(0, 112, 255, .2);
+        animation: tvConfirmAppear .18s ease-out;
+    }
+    #tv-functional-records .tv-confirm-icon {
+        display: grid;
+        place-items: center;
+        width: 58px;
+        height: 58px;
+        margin: 0 auto 14px;
+        color: #ff7185;
+        background: rgba(255, 52, 79, .12);
+        border: 1px solid rgba(255, 107, 130, .55);
+        border-radius: 50%;
+        font-size: 25px;
+    }
+    #tv-functional-records .tv-confirm-dialog h3 { margin: 0 0 12px; font-size: 22px; }
+    #tv-functional-records .tv-confirm-dialog p { margin: 0; color: #d1e4ff; font-size: 15px; line-height: 1.9; overflow-wrap: anywhere; }
+    #tv-functional-records .tv-confirm-actions { display: flex; gap: 10px; margin-top: 24px; }
+    #tv-functional-records .tv-confirm-actions button {
+        flex: 1;
+        min-height: 46px;
+        padding: 10px 14px;
+        border-radius: 9px;
+        color: #fff;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: filter .15s ease, transform .15s ease;
+    }
+    #tv-functional-records .tv-confirm-delete { border: 1px solid #ff7185; background: linear-gradient(135deg, #ff344f, #a90020); }
+    #tv-functional-records .tv-confirm-cancel { border: 1px solid #2589e8; background: linear-gradient(135deg, #0c4388, #092957); }
+    #tv-functional-records .tv-confirm-actions button:hover { filter: brightness(1.12); }
+    #tv-functional-records .tv-confirm-actions button:active { transform: scale(.98); }
+    @keyframes tvConfirmAppear { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @media (max-width: 480px) {
+        #tv-functional-records .tv-confirm-dialog { padding: 22px 17px; }
+        #tv-functional-records .tv-confirm-actions { flex-direction: column; }
+    }
+    </style>
+
+    <!-- TOP-VIDANGE: تخطيط موحّد — تمرير الصفحة دون تحريك القائمة الجانبية -->
+    <style>
+        @media (min-width: 751px) {
+            body { min-height: 100vh; height: auto; overflow-x: hidden; overflow-y: auto; padding-bottom: 40px; display: block; }
+            .dashboard-container { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 20px; width: 100%; max-width: 1600px; margin: 20px auto; padding: 0 20px; overflow: visible; max-height: none; height: auto; align-items: start; }
+            .dashboard-container.records-mode { grid-template-columns: 190px minmax(0, 1fr); }
+            .dashboard-container.records-mode .cars-sidebar { grid-column: 1; grid-row: 1; position: sticky; top: 16px; width: 100%; min-width: 0; align-self: start; }
+            .dashboard-container.records-mode #car-records-view { grid-column: 2; grid-row: 1; width: 100%; min-width: 0; margin: 0; padding: 20px; box-sizing: border-box; }
+            .dashboard-container.records-mode #tv-functional-records { width: 100%; min-width: 0; padding: 18px; }
+            .dashboard-container.records-mode #tv-functional-records .tv-car-info-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 170px; gap: 14px; padding: 14px; }
+            .dashboard-container.records-mode #tv-functional-records .tv-detail-fields { grid-template-columns: minmax(85px, auto) minmax(0, 1fr); }
+        }
+        @media (min-width: 751px) and (max-width: 1100px) {
+            .dashboard-container.records-mode { grid-template-columns: 170px minmax(0, 1fr); gap: 14px; padding: 0 12px; }
+            .dashboard-container.records-mode #tv-functional-records .tv-car-info-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+            .dashboard-container.records-mode #tv-functional-records .tv-qr-column { grid-column: 1 / -1; }
+        }
+        @media (max-width: 750px) {
+            body { height: auto; min-height: 100%; overflow-x: hidden; overflow-y: auto; padding-bottom: 40px; display: block; }
+            .dashboard-container { display: grid; grid-template-columns: minmax(0, 1fr); height: auto; max-height: none; overflow: visible; width: 100%; padding: 0 12px; }
+            .cars-sidebar { position: static; }
+            .dashboard-container.records-mode { grid-template-columns: minmax(0, 1fr); }
+            .dashboard-container.records-mode .cars-sidebar { grid-column: 1; grid-row: 1; position: static; }
+            .dashboard-container.records-mode #car-records-view { grid-column: 2; grid-row: 2; width: 100%; min-width: 0; padding: 12px; }
+            .dashboard-container.records-mode #tv-functional-records { padding: 10px; }
+            .dashboard-container.records-mode #tv-functional-records .tv-car-info-grid { grid-template-columns: minmax(0, 1fr); }
+        }
+    </style>
+
+</head>
+<body>
+    <!-- =====================================================
+         الشريط العلوي
+    ====================================================== -->
+    <header class="main-header">
+        <div class="header-right">
+            <div class="logo-area">
+                <i
+                    class="fa-solid fa-droplet main-drop-icon"
+                ></i>
+                <div class="logo-text">
+                    <h1>
+                        TOP-VIDANGE
+                    </h1>
+                    <p>
+                        خدمات تغيير الزيوت والفلاتر
+                    </p>
+                </div>
+            </div>
+            <div class="germany-flag-badge"></div>
+        </div>
+        <div class="header-left">
+            <div class="user-profile">
+                <i
+                    class="fa-solid fa-user-tie"
+                ></i>
+                <div class="profile-info">
+                    <span class="shop-name">
+                        TOP-VIDANGE
+                    </span>
+                    <span class="user-role">
+                        مدير المحل
+                        <i
+                            class="fa-solid fa-store"
+                        ></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- =====================================================
+         الحاوية الرئيسية
+    ====================================================== -->
+    <main class="dashboard-container">
+        <!-- =================================================
+             القائمة الجانبية
+        ================================================== -->
+        <aside class="cars-sidebar">
+            <div class="cars-sidebar-title">
+                <i
+                    class="fa-solid fa-car"
+                ></i>
+                <span>
+                    إدارة السيارات
+                </span>
+            </div>
+            <div class="cars-sidebar-menu">
+                <!-- إضافة سيارة -->
+                <button
+                    type="button"
+                    class="cars-sidebar-item active" id="nav-add-car"
+                >
+                    <i
+                        class="fa-solid fa-plus"
+                    ></i>
+                    <span>
+                        إضافة سيارة
+                    </span>
+                    <span
+                        class="active-dot"
+                    ></span>
+                </button>
+                <!-- بيانات السيارة -->
+                <button
+                    type="button"
+                    class="cars-sidebar-item" id="nav-car-records"
+                >
+                    <i
+                        class="fa-solid fa-car-side"
+                    ></i>
+                    <span>
+                        بيانات السيارة
+                    </span>
+                </button>
+            </div>
+            <div class="cars-sidebar-record-tools" id="cars-sidebar-record-tools">
+                <div class="cars-sidebar-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="cars-sidebar-search" type="text" inputmode="numeric" placeholder="بحث برقم السيارة..." autocomplete="off" aria-label="بحث برقم السيارة">
+                </div>
+                <div class="cars-sidebar-list" id="cars-sidebar-list" aria-label="قائمة السيارات">
+                    <p class="cars-sidebar-empty">افتح «بيانات السيارة» لعرض السيارات.</p>
+                </div>
+            </div>
+        </aside>
+        <!-- =================================================
+             قسم إضافة السيارة
+        ================================================== -->
+        <section class="data-entry-section">
+            <div class="section-title">
+                <i
+                    class="fa-solid fa-car"
+                ></i>
+                <div>
+                    <h2>
+                        إضافة سيارة جديدة
+                    </h2>
+                    <p>
+                        أدخل بيانات السيارة ثم أنشئ رمز QR لربطه بالسيارة
+                    </p>
+                </div>
+            </div>
+            <form
+                id="car-form"
+                onsubmit="event.preventDefault();"
+            >
+                <div class="form-grid">
+                    <!-- =====================================
+                         العمود الأول
+                    ====================================== -->
+                    <div class="form-column">
+                        <!-- نوع السيارة -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-car-side"
+                                ></i>
+                                نوع السيارة
+                            </label>
+                            <div
+                                class="car-brand-search-wrapper"
+                            >
+                                <input
+                                    type="text"
+                                    id="car-brand"
+                                    placeholder="اكتب نوع السيارة..."
+                                    autocomplete="off"
+                                >
+                                <i
+                                    class="fa-solid fa-magnifying-glass car-brand-search-icon"
+                                ></i>
+                                <div
+                                    id="car-brand-suggestions"
+                                    class="car-brand-suggestions"
+                                ></div>
+                            </div>
+                        </div>
+                        <!-- الموديل -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-gauge-high"
+                                ></i>
+                                الموديل
+                            </label>
+                            <div
+                                class="car-brand-search-wrapper"
+                            >
+                                <input
+                                    type="text"
+                                    id="car-model"
+                                    placeholder="اكتب موديل السيارة..."
+                                    autocomplete="off"
+                                >
+                                <i
+                                    class="fa-solid fa-magnifying-glass car-brand-search-icon"
+                                ></i>
+                                <div
+                                    id="car-model-suggestions"
+                                    class="car-brand-suggestions"
+                                ></div>
+                            </div>
+                        </div>
+                        <!-- سعة المحرك -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-oil-can"
+                                ></i>
+                                سعة المحرك
+                            </label>
+                            <div
+                                class="select-wrapper"
+                            >
+                                <select
+                                    id="engine-capacity"
+                                >
+                                    <option value="2.5L">
+                                        2.5L
+                                    </option>
+                                    <option value="2.0L">
+                                        2.0L
+                                    </option>
+                                    <option value="3.0L">
+                                        3.0L
+                                    </option>
+                                </select>
+                                <i
+                                    class="fa-solid fa-chevron-down select-arrow"
+                                ></i>
+                            </div>
+                        </div>
+                        <!-- سنة الصنع -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-calendar-days"
+                                ></i>
+                                سنة الصنع
+                            </label>
+                            <div
+                                class="date-input-wrapper"
+                            >
+                                <input
+                                    type="number"
+                                    id="prod-year"
+                                    value="2020"
+                                 maxlength="4" inputmode="numeric" pattern="[0-9]{4}">
+                            </div>
+                        </div>
+                        <!-- الكيلومتراج الحالية -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-road"
+                                ></i>
+                                عدد الكيلومتراج الحالية
+                            </label>
+                            <div
+                                class="gauge-input-wrapper"
+                            >
+                                <input
+                                    type="number"
+                                    id="current-km"
+                                    value=
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- =====================================
+                         العمود الثاني
+                    ====================================== -->
+                    <div class="form-column">
+                        <!-- أنواع الفلاتر -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-filter"
+                                ></i>
+                                أنواع الفلاتر المعدلة
+                            </label>
+                            <div
+                                class="select-wrapper"
+                            >
+                                <select
+                                    id="filter-type"
+                                >
+                                    <option
+                                        value="فلتر الزيت / الهواء"
+                                    >
+                                        فلتر الزيت / الهواء
+                                    </option>
+                                    <option
+                                        value="فلتر الوقود"
+                                    >
+                                        فلتر الوقود
+                                    </option>
+                                    <option
+                                        value="فلتر المقصورة"
+                                    >
+                                        فلتر المقصورة
+                                    </option>
+                                </select>
+                                <i
+                                    class="fa-solid fa-chevron-down select-arrow"
+                                ></i>
+                            </div>
+                        </div>
+                        <!-- نوع الزيت -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-droplet"
+                                ></i>
+                                نوع الزيت
+                            </label>
+                            <div
+                                class="select-wrapper"
+                            >
+                                <select
+                                    id="oil-type"
+                                >
+                                    <option value="5W-30">
+                                        5W-30
+                                    </option>
+                                    <option value="10W-40">
+                                        10W-40
+                                    </option>
+                                    <option value="6W-40">
+                                        6W-40
+                                    </option>
+                                </select>
+                                <i
+                                    class="fa-solid fa-chevron-down select-arrow"
+                                ></i>
+                            </div>
+                        </div>
+                        <!-- العلامة التجارية -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-oil-can"
+                                ></i>
+                                العلامة التجارية
+                            </label>
+                            <div
+                                class="select-wrapper"
+                            >
+                                <select
+                                    id="oil-brand"
+                                >
+                                    <option value="Total">
+                                        Total
+                                    </option>
+                                    <option value="Liqui Moly">
+                                        Liqui Moly
+                                    </option>
+                                    <option value="Motul">
+                                        Motul
+                                    </option>
+                                    <option value="Castrol">
+                                        Castrol
+                                    </option>
+                                    <option value="Shell">
+                                        Shell
+                                    </option>
+                                </select>
+                                <i
+                                    class="fa-solid fa-chevron-down select-arrow"
+                                ></i>
+                            </div>
+                        </div>
+                        <!-- الكيلومتراج القادم -->
+                        <div class="input-group">
+                            <label>
+                                <i
+                                    class="fa-solid fa-road"
+                                ></i>
+                                الكيلومتراج القادم
+                            </label>
+                            <div
+                                class="gauge-input-wrapper"
+                            >
+                                <input
+                                    type="text"
+                                    id="next-visit-km"
+                                    inputmode="numeric"
+                                    pattern="[0-9]{0,31}"
+                                    maxlength="31"
+                                    autocomplete="off"
+                                    aria-label="الكيلومتراج القادم (حتى 31 رقمًا)"
+                                >
+                            </div>
+                        </div>
+                        <!-- تاريخ الصيانة -->
+                        <div class="input-group">
+                            <label>
+                                تاريخ الصيانة
+                            </label>
+                            <div
+                                class="date-input-wrapper"
+                            >
+                                <input
+                                    type="date"
+                                    id="maintenance-date"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- =================================================
+                     الملاحظات
+                ================================================== -->
+                <div
+                    class="input-group full-width"
+                >
+                    <label>
+                        <i
+                            class="fa-solid fa-pen-to-square"
+                        ></i>
+                        ملاحظات (اختياري)
+                    </label>
+                    <textarea
+                        id="notes"
+                        placeholder="أضف أي ملاحظات إضافية عن السيارة ..."
+                    ></textarea>
+                </div>
+                <!-- =================================================
+                     زر إنشاء QR
+                ================================================== -->
+                <button
+                    type="button"
+                    class="btn-submit-qr"
+                    id="generate-qr-button"
+                >
+                    <i
+                        class="fa-solid fa-qrcode"
+                    ></i>
+                    إنشاء رمز QR
+                </button>
+                <!-- =================================================
+                     زر تحديث بيانات السيارة
+                ================================================== -->
+                <button
+                    type="button"
+                    class="btn-submit-qr"
+                    id="update-car-button"
+                    style="
+                        margin-top:12px;
+                        display:none;
+                    "
+                >
+                    <i
+                        class="fa-solid fa-rotate"
+                    ></i>
+                    تحديث بيانات السيارة
+                </button>
+            </form>
+        </section>
+        <!-- =================================================
+             قسم QR
+        ================================================== -->
+        <section class="qr-preview-section">
+            <div class="qr-card-container">
+                <div class="qr-card-header">
+                    <div class="qr-header-title">
+                        <i
+                            class="fa-solid fa-qrcode"
+                        ></i>
+                        <span>
+                            رمز السيارة
+                        </span>
+                    </div>
+                    <span
+                        class="badge-ready"
+                        id="ready-badge"
+                        style="display:none;"
+                    >
+                        <i
+                            class="fa-regular fa-circle-check"
+                        ></i>
+                        جاهز للطباعة
+                    </span>
+                </div>
+                <p class="qr-subtext">
+                    أدخل بيانات السيارة ثم اضغط على زر الإنشاء لولادة الرمز العالمي.
+                </p>
+                <!-- صندوق QR -->
+                <div class="qr-display-box">
+                    <div class="qr-border-mock">
+                        <div
+                            class="qr-image-placeholder"
+                            id="qr-box-wrapper"
+                            style="
+                                width:200px;
+                                height:200px;
+                                display:flex;
+                                justify-content:center;
+                                align-items:center;
+                                background:rgba(255,255,255,0.02);
+                            "
+                        >
+                            <i
+                                class="fa-solid fa-qrcode"
+                                id="qr-empty-icon"
+                                style="
+                                    font-size:64px;
+                                    color:var(--border-color);
+                                "
+                            ></i>
+                            <img
+                                id="real-qr-img"
+                                src=""
+                                alt="QR Code"
+                                style="
+                                    display:none;
+                                    width:100%;
+                                    height:100%;
+                                "
+                            >
+                        </div>
+                    </div>
+                </div>
+                <!-- أزرار QR -->
+                <div
+                    class="qr-action-buttons"
+                    id="action-buttons-area"
+                    style="display:none;"
+                >
+                    <button
+                        type="button"
+                        class="btn-action btn-print"
+                    >
+                        <i
+                            class="fa-solid fa-print"
+                        ></i>
+                        طباعة QR
+                    </button>
+                    <button
+                        type="button"
+                        class="btn-action btn-download"
+                    >
+                        <i
+                            class="fa-solid fa-download"
+                        ></i>
+                        حفظ QR صورة
+                    </button>
+                </div>
+                <!-- معرف السيارة -->
+                <div
+                    id="car-id-display"
+                    class="car-id-display"
+                ></div>
+                <!-- رسالة النجاح -->
+                <div
+                    class="success-status-box"
+                    id="success-message-box"
+                    style="display:none;"
+                >
+                    <i
+                        class="fa-regular fa-circle-check success-check-icon"
+                    ></i>
+                    <div class="success-text">
+                        <h4>
+                            تم إنشاء رمز للسيارة بنجاح
+                        </h4>
+                        <p>
+                            يمكنك الآن طباعة الرمز ووضعه على هيكل السيارة.
+                        </p>
+                    </div>
+                </div>
+                <!-- ملخص السيارة -->
+                <div class="car-summary-badge">
+                    <div class="badge-right-info">
+                        <div class="car-icon-circle">
+                            <i
+                                class="fa-solid fa-car"
+                            ></i>
+                        </div>
+                        <div class="car-badge-meta">
+                            <h4>
+                                Toyota Camry
+                            </h4>
+                            <p>
+                                2020
+                                <span>|</span>
+                                2.5L
+                                <span>|</span>
+                                5W-30
+                            </p>
+                            <p
+                                id="summary-next-km"
+                                style="
+                                    margin-top:6px;
+                                "
+                            >
+                                الكيلومتراج القادم: —
+                            </p>
+                        </div>
+                    </div>
+                    <div
+                        class="germany-small-flag-end"
+                    ></div>
+                </div>
+            </div>
+        </section>
+        <!-- =================================================
+             واجهة بيانات السيارات (شكل فقط - دون ربط الوظائف)
+        ================================================== -->
+        <section id="car-records-view" class="data-entry-section" style="display:none; grid-column: 2 / 4; min-width:0;">
+            <div class="section-title">
+                <i class="fa-solid fa-rectangle-list"></i>
+                <div>
+                    <h2>بيانات السيارات</h2>
+                    <p>البحث عن سيارة والاطلاع على بياناتها وسجل تغيير الزيت</p>
+                </div>
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:22px;">
+                <div style="position:relative; flex:1; min-width:220px;">
+                    <i class="fa-solid fa-magnifying-glass" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--accent-blue);"></i>
+                    <input type="text" placeholder="ابحث برقم السيارة أو العلامة التجارية..." disabled
+                        style="width:100%; background:var(--bg-dark); border:1px solid var(--border-color); border-radius:7px; color:var(--text-main); padding:13px 42px 13px 12px;">
+                </div>
+                <button type="button" disabled style="padding:12px 18px; border:1px solid var(--accent-blue); border-radius:7px; color:white; background:rgba(0,127,255,.15); cursor:not-allowed;">
+                    <i class="fa-solid fa-magnifying-glass"></i> بحث
+                </button>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:20px;">
+                <div style="background:var(--bg-dark); border:1px solid var(--border-color); border-radius:9px; padding:17px;">
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:8px;">رقم السيارة</p>
+                    <h3 style="font-size:19px;">CAR-0000</h3>
+                </div>
+                <div style="background:var(--bg-dark); border:1px solid var(--border-color); border-radius:9px; padding:17px;">
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:8px;">العلامة التجارية والموديل</p>
+                    <h3 style="font-size:19px;">Toyota Camry</h3>
+                </div>
+                <div style="background:var(--bg-dark); border:1px solid var(--border-color); border-radius:9px; padding:17px;">
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:8px;">تغيير القادم</p>
+                    <h3 style="font-size:19px;">—</h3>
+                </div>
+            </div>
+            <div style="display:grid; grid-template-columns:minmax(0,1.5fr) minmax(200px,1fr); gap:18px; align-items:start;">
+                <div style="background:var(--bg-dark); border:1px solid var(--border-color); border-radius:10px; padding:18px;">
+                    <h3 style="font-size:16px; margin-bottom:16px;"><i class="fa-solid fa-car-side" style="color:var(--accent-blue); margin-left:8px;"></i>معلومات السيارة</h3>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:14px;">
+                        <div><small style="color:var(--text-muted);">سنة الصنع</small><p style="margin-top:6px;">2020</p></div>
+                        <div><small style="color:var(--text-muted);">سعة المحرك</small><p style="margin-top:6px;">2.5L</p></div>
+                        <div><small style="color:var(--text-muted);">الكيلومتراج الحالية</small><p style="margin-top:6px;">— كم</p></div>
+                        <div><small style="color:var(--text-muted);">نوع الزيت</small><p style="margin-top:6px;">5W-30</p></div>
+                        <div><small style="color:var(--text-muted);">العلامة التجارية للزيت</small><p style="margin-top:6px;">—</p></div>
+                        <div><small style="color:var(--text-muted);">الفلاتر</small><p style="margin-top:6px;">—</p></div>
+                    </div>
+                    <button type="button" disabled style="width:100%; margin-top:22px; padding:14px; background:linear-gradient(90deg,#0055ff,var(--accent-blue)); color:white; border:0; border-radius:7px; font-weight:bold; opacity:.75; cursor:not-allowed;">
+                        <i class="fa-solid fa-rotate"></i> تحديث بيانات السيارة
+                    </button>
+                </div>
+                <div style="background:var(--bg-dark); border:1px solid var(--border-color); border-radius:10px; padding:18px; text-align:center;">
+                    <h3 style="font-size:16px; margin-bottom:14px;"><i class="fa-solid fa-qrcode" style="color:var(--accent-blue); margin-left:8px;"></i>رمز السيارة QR</h3>
+                    <div style="width:150px; height:150px; max-width:100%; margin:0 auto 12px; background:#fff; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#173050; font-size:54px;">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:12px;">سيظهر رمز السيارة عند تفعيل الوظائف لاحقًا</p>
+                </div>
+            </div>
+            <div style="margin-top:22px; background:var(--bg-dark); border:1px solid var(--border-color); border-radius:10px; padding:18px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px;">
+                    <h3 style="font-size:16px;"><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent-blue); margin-left:8px;"></i>سجل تغييرات الزيت</h3>
+                    <span style="font-size:12px; color:var(--text-muted);">عرض تجريبي — غير مربوط بالبيانات</span>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; min-width:560px; text-align:right;">
+                        <thead><tr style="color:var(--text-muted); border-bottom:1px solid var(--border-color);">
+                            <th style="padding:12px 8px;">التاريخ</th><th style="padding:12px 8px;">الكيلومترات</th><th style="padding:12px 8px;">نوع الزيت</th><th style="padding:12px 8px;">العلامة التجارية</th><th style="padding:12px 8px;">ملاحظات</th>
+                        </tr></thead>
+                        <tbody><tr><td colspan="5" style="padding:22px 8px; text-align:center; color:var(--text-muted);">لا توجد بيانات معروضة حاليًا</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+</main>
+    <!-- =====================================================
+         شريط الحالة السفلي
+    ====================================================== -->
+    <footer class="status-footer">
+        <div class="status-right">
+            جاهز للاستخدام
+        </div>
+        <div class="status-left">
+            <i
+                class="fa-regular fa-clock"
+            ></i>
+            <span id="live-time">
+                2026-09-30 03:29
+            </span>
+        </div>
+    </footer>
+    <!-- =====================================================
+         JavaScript
+    ====================================================== -->
+    <script>
+// ==========================================
+// TOP-VIDANGE - APP.JS
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    // ==========================================
+    // 1. التوقيت الحي
+    // ==========================================
+    const liveTimeElement =
+        document.getElementById("live-time");
+    if (liveTimeElement) {
+        const updateLiveTime = () => {
+            const now = new Date();
+            const year =
+                now.getFullYear();
+            const month =
+                String(now.getMonth() + 1).padStart(2, "0");
+            const day =
+                String(now.getDate()).padStart(2, "0");
+            const hours =
+                String(now.getHours()).padStart(2, "0");
+            const minutes =
+                String(now.getMinutes()).padStart(2, "0");
+            liveTimeElement.textContent =
+                `${year}-${month}-${day} ${hours}:${minutes}`;
+        };
+        updateLiveTime();
+        setInterval(
+            updateLiveTime,
+            60000
+        );
+    }
+    // ==========================================
+    // 2. Google Apps Script
+    // ==========================================
+    const APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec";
+    const getAdminPin = () => {
+        let pin = sessionStorage.getItem("topVidangeAdminPin") || "";
+        if (!pin) {
+            pin = (window.prompt("أدخل الرقم السري لصاحب المحل:") || "").trim();
+            if (pin) sessionStorage.setItem("topVidangeAdminPin", pin);
+        }
+        return pin.trim();
+    };
+    const createAccessToken = () => {
+        const bytes = new Uint8Array(32);
+        crypto.getRandomValues(bytes);
+        return Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+    };
+    // ==========================================
+    // 3. عناصر النموذج
+    // ==========================================
+    const carBrandSelect =
+        document.getElementById("car-brand");
+    const carModelSelect =
+        document.getElementById("car-model");
+    const engineCapacitySelect =
+        document.getElementById("engine-capacity");
+    const prodYearInput =
+        document.getElementById("prod-year");
+    const currentKmInput =
+        document.getElementById("current-km");
+    const filterTypeSelect =
+        document.getElementById("filter-type");
+    const oilTypeSelect =
+        document.getElementById("oil-type");
+    const oilBrandSelect =
+        document.getElementById("oil-brand");
+    const nextVisitKmInput =
+        document.getElementById("next-visit-km");
+    const maintenanceDateInput =
+        document.getElementById("maintenance-date");
+                         if (maintenanceDateInput && !maintenanceDateInput.value) {
+                         const today = new Date();
+                         maintenanceDateInput.value =
+                        `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+}
+    const notesInput =
+        document.getElementById("notes");
+    // ==========================================
+    // 4. بحث العلامة التجارية
+    // ==========================================
+    const carBrandSuggestions =
+        document.getElementById(
+            "car-brand-suggestions"
+        );
+    const carBrands = [
+        "Toyota",
+        "Mercedes-Benz",
+        "BMW",
+        "Audi",
+        "Volkswagen",
+        "Porsche",
+        "Opel",
+        "Smart",
+        "Renault",
+        "Peugeot",
+        "Citroën",
+        "DS Automobiles",
+        "Alpine",
+        "Fiat",
+        "Alfa Romeo",
+        "Lancia",
+        "Maserati",
+        "Ferrari",
+        "Lamborghini",
+        "Land Rover",
+        "Range Rover",
+        "Jaguar",
+        "Bentley",
+        "Rolls-Royce",
+        "Aston Martin",
+        "McLaren",
+        "Lotus",
+        "Mini",
+        "Volvo",
+        "Saab",
+        "Polestar",
+        "Koenigsegg",
+        "Škoda",
+        "SEAT",
+        "CUPRA",
+        "Dacia",
+        "Ford",
+        "Chevrolet",
+        "Cadillac",
+        "GMC",
+        "Jeep",
+        "Dodge",
+        "Chrysler",
+        "Lincoln",
+        "Buick",
+        "Tesla",
+        "RAM",
+        "Honda",
+        "Nissan",
+        "Mazda",
+        "Mitsubishi",
+        "Subaru",
+        "Suzuki",
+        "Lexus",
+        "Infiniti",
+        "Acura",
+        "Isuzu",
+        "Daihatsu",
+        "Hyundai",
+        "Kia",
+        "Genesis",
+        "Daewoo",
+        "BYD",
+        "Geely",
+        "Chery",
+        "Changan",
+        "MG",
+        "Haval",
+        "Great Wall",
+        "GWM",
+        "Dongfeng",
+        "JAC",
+        "Jetour",
+        "BAIC",
+        "Foton",
+        "FAW",
+        "Exeed",
+        "GAC",
+        "Hongqi",
+        "NIO",
+        "XPeng",
+        "Li Auto",
+        "Tata",
+        "Mahindra",
+        "Maruti Suzuki",
+        "Proton",
+        "Perodua"
+    ];
+    let activeBrandIndex = -1;
+    const showBrandSuggestions = (
+        searchText = ""
+    ) => {
+        if (
+            !carBrandSuggestions ||
+            !carBrandSelect
+        ) {
+            return;
+        }
+        const query =
+            searchText
+                .trim()
+                .toLowerCase();
+        let filteredBrands;
+        if (query === "") {
+            filteredBrands =
+                carBrands;
+        } else {
+            filteredBrands =
+                carBrands.filter(
+                    (brand) => {
+                        return brand
+                            .toLowerCase()
+                            .includes(query);
+                    }
+                );
+        }
+        carBrandSuggestions.innerHTML = "";
+        activeBrandIndex = -1;
+        filteredBrands.forEach(
+            (brand, index) => {
+                const item =
+                    document.createElement("div");
+                item.className =
+                    "car-brand-suggestion";
+                item.textContent =
+                    brand;
+                item.dataset.index =
+                    index;
+                item.addEventListener(
+                    "mousedown",
+                    (event) => {
+                        event.preventDefault();
+                        carBrandSelect.value =
+                            brand;
+                        hideBrandSuggestions();
+                        if (carModelSelect) {
+                            carModelSelect.value = "";
+                        }
+                        hideModelSuggestions();
+                        updateLivePreview();
+                    }
+                );
+                carBrandSuggestions.appendChild(
+                    item
+                );
+            }
+        );
+        if (
+            filteredBrands.length > 0
+        ) {
+            carBrandSuggestions.style.display =
+                "block";
+        } else {
+            carBrandSuggestions.style.display =
+                "none";
+        }
+    };
+    const hideBrandSuggestions = () => {
+        if (carBrandSuggestions) {
+            carBrandSuggestions.style.display =
+                "none";
+        }
+        activeBrandIndex = -1;
+    };
+    const updateActiveBrand = () => {
+        if (!carBrandSuggestions) {
+            return;
+        }
+        const items =
+            carBrandSuggestions.querySelectorAll(
+                ".car-brand-suggestion"
+            );
+        items.forEach(
+            (item, index) => {
+                item.classList.toggle(
+                    "active",
+                    index === activeBrandIndex
+                );
+            }
+        );
+        if (
+            activeBrandIndex >= 0 &&
+            items[activeBrandIndex]
+        ) {
+            items[
+                activeBrandIndex
+            ].scrollIntoView({
+                block: "nearest"
+            });
+        }
+    };
+    // ==========================================
+    // 5. موديلات السيارات حسب العلامة
+    // ==========================================
+    const carModelSuggestions =
+        document.getElementById(
+            "car-model-suggestions"
+        );
+    const carModels = {
+        "Toyota": [
+            "Camry",
+            "Corolla",
+            "Yaris",
+            "RAV4",
+            "Land Cruiser",
+            "Hilux",
+            "C-HR",
+            "Prius"
+        ],
+        "Mercedes-Benz": [
+            "A-Class",
+            "B-Class",
+            "C-Class",
+            "E-Class",
+            "S-Class",
+            "CLA",
+            "GLA",
+            "GLC",
+            "GLE",
+            "GLS",
+            "Sprinter",
+            "Vito"
+        ],
+        "BMW": [
+            "1 Series",
+            "2 Series",
+            "3 Series",
+            "4 Series",
+            "5 Series",
+            "7 Series",
+            "X1",
+            "X3",
+            "X5",
+            "X6"
+        ],
+        "Audi": [
+            "A1",
+            "A3",
+            "A4",
+            "A5",
+            "A6",
+            "A7",
+            "A8",
+            "Q3",
+            "Q5",
+            "Q7"
+        ],
+        "Volkswagen": [
+            "Golf",
+            "Polo",
+            "Passat",
+            "Tiguan",
+            "Touareg",
+            "Transporter"
+        ],
+        "Renault": [
+            "Clio",
+            "Megane",
+            "Symbol",
+            "Captur",
+            "Kadjar",
+            "Koleos"
+        ],
+        "Peugeot": [
+            "208",
+            "308",
+            "508",
+            "2008",
+            "3008",
+            "5008"
+        ],
+        "Fiat": [
+            "500",
+            "Panda",
+            "Punto",
+            "Tipo",
+            "Doblo"
+        ],
+        "Ford": [
+            "Fiesta",
+            "Focus",
+            "Mondeo",
+            "Kuga",
+            "Ranger",
+            "Transit"
+        ],
+        "Nissan": [
+            "Micra",
+            "Qashqai",
+            "Juke",
+            "X-Trail",
+            "Navara"
+        ],
+        "Hyundai": [
+            "i10",
+            "i20",
+            "i30",
+            "Elantra",
+            "Tucson",
+            "Santa Fe"
+        ],
+        "Kia": [
+            "Picanto",
+            "Rio",
+            "Ceed",
+            "Cerato",
+            "Sportage",
+            "Sorento"
+        ]
+    };
+    let activeModelIndex = -1;
+    const showModelSuggestions = (
+        searchText = ""
+    ) => {
+        if (
+            !carModelSuggestions ||
+            !carModelSelect
+        ) {
+            return;
+        }
+        const selectedBrand =
+            carBrandSelect
+                ? carBrandSelect.value.trim()
+                : "";
+        const models =
+            carModels[selectedBrand] || [];
+        const query =
+            searchText
+                .trim()
+                .toLowerCase();
+        const filteredModels =
+            models.filter(
+                (model) => {
+                    return model
+                        .toLowerCase()
+                        .includes(query);
+                }
+            );
+        carModelSuggestions.innerHTML = "";
+        activeModelIndex = -1;
+        filteredModels.forEach(
+            (model, index) => {
+                const item =
+                    document.createElement("div");
+                item.className =
+                    "car-brand-suggestion";
+                item.textContent =
+                    model;
+                item.dataset.index =
+                    index;
+                item.addEventListener(
+                    "mousedown",
+                    (event) => {
+                        event.preventDefault();
+                        carModelSelect.value =
+                            model;
+                        hideModelSuggestions();
+                        updateLivePreview();
+                    }
+                );
+                carModelSuggestions.appendChild(
+                    item
+                );
+            }
+        );
+        if (
+            filteredModels.length > 0
+        ) {
+            carModelSuggestions.style.display =
+                "block";
+        } else {
+            carModelSuggestions.style.display =
+                "none";
+        }
+    };
+    const hideModelSuggestions = () => {
+        if (carModelSuggestions) {
+            carModelSuggestions.style.display =
+                "none";
+        }
+        activeModelIndex = -1;
+    };
+    // ==========================================
+    // 6. أحداث البحث
+    // ==========================================
+    if (
+        carBrandSelect &&
+        carBrandSuggestions
+    ) {
+        carBrandSelect.addEventListener(
+            "focus",
+            () => {
+                showBrandSuggestions(
+                    carBrandSelect.value
+                );
+            }
+        );
+        carBrandSelect.addEventListener(
+            "input",
+            () => {
+                if (carModelSelect) {
+                    carModelSelect.value = "";
+                }
+                hideModelSuggestions();
+                showBrandSuggestions(
+                    carBrandSelect.value
+                );
+                updateLivePreview();
+            }
+        );
+        carBrandSelect.addEventListener(
+            "keydown",
+            (event) => {
+                const items =
+                    carBrandSuggestions.querySelectorAll(
+                        ".car-brand-suggestion"
+                    );
+                if (
+                    event.key === "ArrowDown"
+                ) {
+                    event.preventDefault();
+                    if (
+                        items.length === 0
+                    ) {
+                        return;
+                    }
+                    activeBrandIndex =
+                        Math.min(
+                            activeBrandIndex + 1,
+                            items.length - 1
+                        );
+                    updateActiveBrand();
+                    return;
+                }
+                if (
+                    event.key === "ArrowUp"
+                ) {
+                    event.preventDefault();
+                    if (
+                        items.length === 0
+                    ) {
+                        return;
+                    }
+                    activeBrandIndex =
+                        Math.max(
+                            activeBrandIndex - 1,
+                            0
+                        );
+                    updateActiveBrand();
+                    return;
+                }
+                if (
+                    event.key === "Enter"
+                ) {
+                    if (
+                        activeBrandIndex >= 0 &&
+                        items[activeBrandIndex]
+                    ) {
+                        event.preventDefault();
+                        carBrandSelect.value =
+                            items[
+                                activeBrandIndex
+                            ].textContent;
+                        if (carModelSelect) {
+                            carModelSelect.value = "";
+                        }
+                        hideBrandSuggestions();
+                        hideModelSuggestions();
+                        updateLivePreview();
+                    }
+                    return;
+                }
+                if (
+                    event.key === "Escape"
+                ) {
+                    hideBrandSuggestions();
+                }
+            }
+        );
+    }
+    if (
+        carModelSelect &&
+        carModelSuggestions
+    ) {
+        carModelSelect.addEventListener(
+            "focus",
+            () => {
+                showModelSuggestions(
+                    carModelSelect.value
+                );
+            }
+        );
+        carModelSelect.addEventListener(
+            "input",
+            () => {
+                showModelSuggestions(
+                    carModelSelect.value
+                );
+                updateLivePreview();
+            }
+        );
+        carModelSelect.addEventListener(
+            "keydown",
+            (event) => {
+                const items =
+                    carModelSuggestions.querySelectorAll(
+                        ".car-brand-suggestion"
+                    );
+                if (
+                    event.key === "ArrowDown"
+                ) {
+                    event.preventDefault();
+                    if (
+                        items.length === 0
+                    ) {
+                        return;
+                    }
+                    activeModelIndex =
+                        Math.min(
+                            activeModelIndex + 1,
+                            items.length - 1
+                        );
+                    items.forEach(
+                        (item, index) => {
+                            item.classList.toggle(
+                                "active",
+                                index === activeModelIndex
+                            );
+                        }
+                    );
+                    return;
+                }
+                if (
+                    event.key === "ArrowUp"
+                ) {
+                    event.preventDefault();
+                    if (
+                        items.length === 0
+                    ) {
+                        return;
+                    }
+                    activeModelIndex =
+                        Math.max(
+                            activeModelIndex - 1,
+                            0
+                        );
+                    items.forEach(
+                        (item, index) => {
+                            item.classList.toggle(
+                                "active",
+                                index === activeModelIndex
+                            );
+                        }
+                    );
+                    return;
+                }
+                if (
+                    event.key === "Enter"
+                ) {
+                    if (
+                        activeModelIndex >= 0 &&
+                        items[activeModelIndex]
+                    ) {
+                        event.preventDefault();
+                        carModelSelect.value =
+                            items[
+                                activeModelIndex
+                            ].textContent;
+                        hideModelSuggestions();
+                        updateLivePreview();
+                    }
+                    return;
+                }
+                if (
+                    event.key === "Escape"
+                ) {
+                    hideModelSuggestions();
+                }
+            }
+        );
+    }
+    document.addEventListener(
+        "click",
+        (event) => {
+            if (
+                carBrandSelect &&
+                carBrandSuggestions &&
+                !carBrandSelect.contains(
+                    event.target
+                ) &&
+                !carBrandSuggestions.contains(
+                    event.target
+                )
+            ) {
+                hideBrandSuggestions();
+            }
+            if (
+                carModelSelect &&
+                carModelSuggestions &&
+                !carModelSelect.contains(
+                    event.target
+                ) &&
+                !carModelSuggestions.contains(
+                    event.target
+                )
+            ) {
+                hideModelSuggestions();
+            }
+        }
+    );
+    // ==========================================
+    // 7. المعاينة الحية
+    // ==========================================
+    const summaryTitle =
+        document.querySelector(
+            ".car-badge-meta h4"
+        );
+    const summaryDetails =
+        document.querySelector(
+            ".car-badge-meta p"
+        );
+    const summaryNextKm =
+        document.getElementById(
+            "summary-next-km"
+        );
+    const updateLivePreview = () => {
+        if (
+            summaryTitle &&
+            carBrandSelect &&
+            carModelSelect
+        ) {
+            const brand =
+                carBrandSelect.value.trim();
+            const model =
+                carModelSelect.value.trim();
+            if (
+                brand &&
+                model
+            ) {
+                summaryTitle.textContent =
+                    `${brand} ${model}`;
+            } else if (brand) {
+                summaryTitle.textContent =
+                    brand;
+            } else {
+                summaryTitle.textContent =
+                    "السيارة";
+            }
+        }
+        if (
+            summaryDetails &&
+            prodYearInput &&
+            engineCapacitySelect &&
+            oilTypeSelect
+        ) {
+            summaryDetails.innerHTML =
+                `${prodYearInput.value || "2020"}
+                <span>|</span>
+                ${engineCapacitySelect.value}
+                <span>|</span>
+                ${oilTypeSelect.value}`;
+        }
+        if (summaryNextKm) {
+            const nextKm =
+                nextVisitKmInput
+                    ? nextVisitKmInput.value.trim()
+                    : "";
+            if (nextKm) {
+                const numericKm =
+                    Number(
+                        nextKm.replace(
+                            /,/g,
+                            ""
+                        )
+                    );
+                if (
+                    !Number.isNaN(
+                        numericKm
+                    )
+                ) {
+                    summaryNextKm.textContent =
+                        `الكيلومتراج القادم: ${numericKm.toLocaleString("fr-FR")} كم`;
+                } else {
+                    summaryNextKm.textContent =
+                        `الكيلومتراج القادم: ${nextKm} كم`;
+                }
+            } else {
+                summaryNextKm.textContent =
+                    "الكيلومتراج القادم: —";
+            }
+        }
+    };
+    const inputElements = [
+        carBrandSelect,
+        carModelSelect,
+        engineCapacitySelect,
+        prodYearInput,
+        currentKmInput,
+        filterTypeSelect,
+        oilTypeSelect,
+        oilBrandSelect,
+        nextVisitKmInput,
+        maintenanceDateInput,
+        notesInput
+    ];
+    inputElements.forEach(
+        (element) => {
+            if (element) {
+                element.addEventListener(
+                    "change",
+                    updateLivePreview
+                );
+            }
+        }
+    );
+    if (prodYearInput) {
+        prodYearInput.addEventListener(
+            "input",
+            updateLivePreview
+        );
+    }
+    if (currentKmInput) {
+        currentKmInput.addEventListener(
+            "input",
+            updateLivePreview
+        );
+    }
+    if (nextVisitKmInput) {
+        nextVisitKmInput.addEventListener("input", function () {
+            const digitsOnly = this.value.replace(/\D/g, "").slice(0, 31);
+            if (this.value !== digitsOnly) this.value = digitsOnly;
+        });
+    }
+    if (nextVisitKmInput) {
+        nextVisitKmInput.addEventListener(
+            "input",
+            updateLivePreview
+        );
+    }
+    if (notesInput) {
+        notesInput.addEventListener(
+            "input",
+            updateLivePreview
+        );
+    }
+    updateLivePreview();
+    // ==========================================
+    // 8. عناصر QR
+    // ==========================================
+    const generateQrButton =
+        document.getElementById(
+            "generate-qr-button"
+        );
+    const updateCarButton =
+        document.getElementById(
+            "update-car-button"
+        );
+    const realQrImg =
+        document.getElementById(
+            "real-qr-img"
+        );
+    const qrEmptyIcon =
+        document.getElementById(
+            "qr-empty-icon"
+        );
+    const successMessageBox =
+        document.getElementById(
+            "success-message-box"
+        );
+    const actionButtonsArea =
+        document.getElementById(
+            "action-buttons-area"
+        );
+    const readyBadge =
+        document.getElementById(
+            "ready-badge"
+        );
+    const carIdDisplay =
+        document.getElementById(
+            "car-id-display"
+        );
+    // ==========================================
+    // 9. إنشاء ID السيارة
+    // ==========================================
+    const getNextCarId = () => {
+        let nextNumber =
+            parseInt(
+                localStorage.getItem(
+                    "topVidangeNextCarNumber"
+                )
+            ) || 1;
+        const carId =
+            "CAR-" +
+            String(
+                nextNumber
+            ).padStart(
+                4,
+                "0"
+            );
+        localStorage.setItem(
+            "topVidangeNextCarNumber",
+            nextNumber + 1
+        );
+        return carId;
+    };
+    // ==========================================
+    // 10. إرسال البيانات إلى Google
+    // ==========================================
+    const sendCarDataToGoogle = (
+        carData
+    ) => {
+        const adminPin = getAdminPin();
+        if (!adminPin) return Promise.resolve(false);
+        return fetch(
+            APPS_SCRIPT_URL,
+            {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify({ ...carData, adminPin })
+            }
+        )
+        .then(
+            () => {
+                console.log(
+                    "تم إرسال بيانات السيارة إلى Google"
+                );
+                return true;
+            }
+        )
+        .catch(
+            (error) => {
+                console.error(
+                    "فشل إرسال البيانات إلى Google:",
+                    error
+                );
+                return false;
+            }
+        );
+    };
+    // ==========================================
+    // 11. إنشاء QR
+    // ==========================================
+    if (generateQrButton) {
+        generateQrButton.addEventListener(
+            "click",
+            async () => {
+                const carId =
+                    getNextCarId();
+                localStorage.setItem(
+                    "topVidangeCurrentCarId",
+                    carId
+                );
+                if (carIdDisplay) {
+                    carIdDisplay.textContent =
+                        `معرّف السيارة: ${carId}`;
+                }
+                const accessToken = createAccessToken();
+                const customerUrl =
+                    `https://zzako0902-lang.github.io/top-vidange00/customer.html?token=${encodeURIComponent(accessToken)}`;
+                const qrApiUrl =
+                    "https://api.qrserver.com/v1/create-qr-code/"
+                    + "?size=200x200"
+                    + "&data="
+                    + encodeURIComponent(
+                        customerUrl
+                    );
+                if (realQrImg) {
+                    realQrImg.src =
+                        qrApiUrl;
+                    realQrImg.style.display =
+                        "block";
+                }
+                if (qrEmptyIcon) {
+                    qrEmptyIcon.style.display =
+                        "none";
+                }
+                if (successMessageBox) {
+                    successMessageBox.style.display =
+                        "flex";
+                }
+                if (actionButtonsArea) {
+                    actionButtonsArea.style.display =
+                        "flex";
+                }
+                if (readyBadge) {
+                    readyBadge.style.display =
+                        "inline-block";
+                }
+                if (updateCarButton) {
+                    updateCarButton.style.display =
+                        "block";
+                }
+                const carData = {
+                    id:
+                        carId,
+                    access_token:
+                        accessToken,
+                    brand:
+                        carBrandSelect?.value || "",
+                    model:
+                        carModelSelect?.value || "",
+                    year:
+                        prodYearInput?.value || "",
+                    engine:
+                        engineCapacitySelect?.value || "",
+                    oil:
+                        oilTypeSelect?.value || "",
+                    oil_brand:
+                        oilBrandSelect?.value || "",
+                    mileage:
+                        currentKmInput?.value || "",
+                    filters:
+                        filterTypeSelect?.value || "",
+                    next_service:
+                        "",
+                    next_km:
+                        nextVisitKmInput?.value || "",
+                    maintenance_date:
+                        maintenanceDateInput?.value || "",
+                    notes:
+                        notesInput?.value || "",
+                    createdAt:
+                        new Date().toISOString()
+                };
+                localStorage.setItem(
+                    `topVidange\_${carId}`,
+                    JSON.stringify(
+                        carData
+                    )
+                );
+                updateLivePreview();
+                await sendCarDataToGoogle(
+                    carData
+                );
+                console.log(
+                    "السيارة:",
+                    carData
+                );
+            }
+        );
+    }
+// ==========================================
+// 12. تحديث بيانات السيارة وتسجيل الصيانة
+// ==========================================
+if (updateCarButton) {
+    updateCarButton.addEventListener("click", async () => {
+        const currentCarId = localStorage.getItem(
+            "topVidangeCurrentCarId"
+        );
+        if (!currentCarId || updateCarButton.disabled) {
+            return;
+        }
+        // التأكد من وجود تاريخ الصيانة
+        const maintenanceDate = maintenanceDateInput?.value || "";
+        const mileage = currentKmInput?.value || "";
+        if (!maintenanceDate || !mileage) {
+            alert("يرجى إدخال تاريخ الصيانة والكيلومترات الحالية.");
+            return;
+        }
+        updateCarButton.disabled = true;
+        const originalButtonHTML = updateCarButton.innerHTML;
+        updateCarButton.innerHTML = `
+            <i class="fa-solid fa-rotate fa-spin"></i>
+            جاري تسجيل الصيانة والتحديث...
+        `;
+        let fixedCarData = {};
+        try { fixedCarData = JSON.parse(localStorage.getItem("topVidangeCurrentCarData") || "{}"); } catch (_) { fixedCarData = {}; }
+        const adminPin = getAdminPin();
+        if (!adminPin) { updateCarButton.disabled = false; return; }
+        let savedToken = "";
+        try { savedToken = JSON.parse(localStorage.getItem(`topVidange_${currentCarId}`) || "{}").access_token || ""; } catch (_) {}
+        const updatedCarData = {
+            action: "updateCarAndRecordMaintenance",
+            adminPin,
+            access_token: savedToken,
+            id: currentCarId,
+            brand: fixedCarData.brand || carBrandSelect?.value || "",
+            model: fixedCarData.model || carModelSelect?.value || "",
+            year: fixedCarData.year || prodYearInput?.value || "",
+            engine: fixedCarData.engine || engineCapacitySelect?.value || "",
+            oil: oilTypeSelect?.value || "",
+            oil_brand: oilBrandSelect?.value || "",
+            mileage: mileage,
+            filters: filterTypeSelect?.value || "",
+            next_service: "",
+            next_km: nextVisitKmInput?.value || "",
+            maintenance_date: maintenanceDate,
+            notes: notesInput?.value || "",
+            updatedAt: new Date().toISOString()
+        };
+        try {
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify(updatedCarData)
+            });
+            // في وضع no-cors لا يمكن قراءة استجابة Google
+            // لذلك لا ندّعي أن الخادم أكد نجاح العملية.
+            localStorage.setItem(
+                `topVidange\_${currentCarId}`,
+                JSON.stringify(updatedCarData)
+            );
+            updateCarButton.innerHTML = `
+                <i class="fa-solid fa-check"></i>
+                تم إرسال طلب التحديث
+            `;
+            if (successMessageBox) {
+                successMessageBox.style.display = "flex";
+                const successTitle =
+                    successMessageBox.querySelector(".success-text h4");
+                const successDescription =
+                    successMessageBox.querySelector(".success-text p");
+                if (successTitle) {
+                    successTitle.textContent = "تم إرسال طلب التحديث";
+                }
+                if (successDescription) {
+                    successDescription.textContent =
+                        "يرجى التحقق من Google Sheets للتأكد من تسجيل الصيانة.";
+                }
+            }
+            updateLivePreview();
+        } catch (error) {
+            console.error("خطأ في إرسال بيانات الصيانة:", error);
+            updateCarButton.innerHTML = originalButtonHTML;
+            if (successMessageBox) {
+                successMessageBox.style.display = "flex";
+                const successTitle =
+                    successMessageBox.querySelector(".success-text h4");
+                const successDescription =
+                    successMessageBox.querySelector(".success-text p");
+                if (successTitle) {
+                    successTitle.textContent = "تعذر إرسال الطلب";
+                }
+                if (successDescription) {
+                    successDescription.textContent =
+                        "تحقق من اتصال الإنترنت ثم حاول مجددًا.";
+                }
+            }
+        } finally {
+            setTimeout(() => {
+                updateCarButton.disabled = false;
+                updateCarButton.innerHTML = document.querySelector(".dashboard-container")?.classList.contains("update-mode")
+                    ? '<i class="fa-solid fa-rotate"></i> تحديث بيانات السيارة فقط'
+                    : originalButtonHTML;
+            }, 2000);
+        }
+    });
+}
+    // ==========================================
+    // 13. طباعة QR
+    // ==========================================
+    const printButton =
+        document.querySelector(
+            ".btn-print"
+        );
+    if (printButton) {
+        printButton.addEventListener(
+            "click",
+            () => {
+                if (
+                    !realQrImg ||
+                    !realQrImg.src
+                ) {
+                    return;
+                }
+                const qrWindow =
+                    window.open(
+                        "",
+                        "\_blank"
+                    );
+                if (!qrWindow) {
+                    return;
+                }
+                qrWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="ar" dir="rtl">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>
+                            QR - TOP-VIDANGE
+                        </title>
+                        <style>
+
+/* TOP-VIDANGE: تثبيت الشريط العلوي والقائمة الجانبية، والتمرير داخل المحتوى */
+@media (min-width: 751px) {
+    body {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        overflow: hidden !important;
+        padding-bottom: 0 !important;
+    }
+    .main-header {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        z-index: 1000 !important;
+    }
+    .dashboard-container {
+        position: fixed !important;
+        top: 74px !important;
+        right: 0 !important;
+        left: 0 !important;
+        bottom: 32px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        overscroll-behavior: contain;
+        scrollbar-width: thin;
+    }
+    .dashboard-container > .cars-sidebar,
+    .dashboard-container.records-mode .cars-sidebar {
+        position: sticky !important;
+        top: 12px !important;
+        align-self: start !important;
+        z-index: 20 !important;
+    }
+}
+@media (max-width: 750px) {
+    .main-header {
+        position: relative;
+    }
+}
+    </style>
+    <style>
+        /* وضع تحديث السيارة: نفس تصميم الإضافة مع إبقاء بيانات السيارة محددة في القائمة */
+        html body .dashboard-container.records-mode.update-mode {
+            grid-template-columns: 190px minmax(0, 1.6fr) minmax(280px, 1fr) !important;
+            grid-template-areas: "sidebar entry qr" !important;
+        }
+        html body .dashboard-container.records-mode.update-mode #car-records-view { display: none !important; }
+        html body .dashboard-container.records-mode.update-mode .data-entry-section { grid-area: entry; min-width: 0; }
+        html body .dashboard-container.records-mode.update-mode .qr-preview-section { grid-area: qr; min-width: 0; }
+        html body .dashboard-container.update-mode .input-group:has(#car-brand) input,
+        html body .dashboard-container.update-mode .input-group:has(#car-model) input,
+        html body .dashboard-container.update-mode #prod-year,
+        html body .dashboard-container.update-mode #engine-capacity { cursor: default; }
+        html body .dashboard-container.update-mode #car-brand,
+        html body .dashboard-container.update-mode #car-model,
+        html body .dashboard-container.update-mode #prod-year { opacity: 1; }
+        html body .dashboard-container.update-mode #engine-capacity:disabled { opacity: 1; color: #fff; }
+        @media (min-width: 751px) and (max-width: 1100px) {
+            html body .dashboard-container.records-mode.update-mode {
+                grid-template-columns: 175px minmax(0, 1fr) !important;
+                grid-template-areas: "sidebar entry" "sidebar qr" !important;
+            }
+        }
+        @media (max-width: 750px) {
+            html body .dashboard-container.records-mode.update-mode {
+                grid-template-columns: minmax(0, 1fr) !important;
+                grid-template-areas: "sidebar" "entry" "qr" !important;
+            }
+        }
+    </style>
+</head>
+                    <body
+                        style="
+                            margin:0;
+                            display:flex;
+                            justify-content:center;
+                            align-items:center;
+                            min-height:100vh;
+                        "
+                    >
+                        <img
+                            src="${realQrImg.src}"
+                            style="
+                                width:300px;
+                                height:300px;
+                            "
+                            alt="QR Code"
+                        >
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                            };
+                        <\\/script>
+                    </body>
+                    </html>
+                `);
+                qrWindow.document.close();
+            }
+        );
+    }
+    // ==========================================
+    // 14. تحميل QR
+    // ==========================================
+    const downloadButton =
+        document.querySelector(
+            ".btn-download"
+        );
+    if (downloadButton) {
+        downloadButton.addEventListener(
+            "click",
+            () => {
+                if (
+                    !realQrImg ||
+                    !realQrImg.src
+                ) {
+                    return;
+                }
+                const link =
+                    document.createElement(
+                        "a"
+                    );
+                link.href =
+                    realQrImg.src;
+                link.download =
+                    "QR_TOP_VIDANGE.png";
+                document.body.appendChild(
+                    link
+                );
+                link.click();
+                document.body.removeChild(
+                    link
+                );
+            }
+        );
+    }
+    // =========================================================
+    // 15. واجهة بيانات السيارات: البحث والبيانات وسجل الصيانة
+    // =========================================================
+    const recordsView = document.getElementById("car-records-view");
+    if (recordsView) {
+        const recordsHeading = recordsView.querySelector(".section-title");
+        const recordsApiUrl = APPS_SCRIPT_URL;
+        const recordsUi = document.createElement("div");
+        recordsUi.id = "tv-functional-records";
+        recordsUi.innerHTML = `
+            <section class="tv-search-panel">
+                <h2 class="tv-search-title">البحث عن سيارة</h2>
+                <p class="tv-search-subtitle">أدخل ID السيارة</p>
+                <div class="tv-search-row" dir="ltr">
+                    <button id="tv-record-delete" class="tv-delete-button" type="button" title="حذف السيارة نهائيًا">
+                        <i class="fa-solid fa-trash-can"></i><span>حذف السيارة</span>
+                    </button>
+                    <button id="tv-record-search-button" class="tv-search-button" type="button">
+                        <i class="fa-solid fa-magnifying-glass"></i><span>بحث</span>
+                    </button>
+                    <div class="tv-search-input-wrap">
+                        <i class="fa-solid fa-car tv-search-car-icon"></i>
+                        <input id="tv-record-search" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="0090" autocomplete="off" aria-label="رقم السيارة بدون CAR-">
+                    </div>
+                </div>
+                <p id="tv-record-status" role="status" aria-live="polite">أدخل أرقام السيارة فقط؛ مثال 0090 للمعرّف CAR-0090.</p>
+            </section>
+            <div id="tv-record-results" style="display:none;margin-bottom:18px;"></div>
+            <div id="tv-record-detail" style="display:none;">
+                <section class="tv-detail-card">
+                    <div class="tv-detail-heading"><span>معلومات السيارة</span><i class="fa-solid fa-car-side"></i></div>
+                    <div class="tv-car-info-grid">
+                        <div id="tv-detail-fields-left" class="tv-detail-fields"></div>
+                        <div id="tv-detail-fields-right" class="tv-detail-fields"></div>
+                        <div class="tv-qr-column">
+                            <div class="tv-qr-frame"><img id="tv-detail-qr" alt="رمز QR للسيارة"></div>
+                            <p id="tv-detail-qr-id"></p>
+                            <button id="tv-open-customer-page" type="button">فتح صفحة السيارة</button>
+                        </div>
+                    </div>
+                </section>
+                <button id="tv-edit-car" type="button"><i class="fa-solid fa-rotate"></i><span>تحديث بيانات السيارة</span></button>
+                <section class="tv-history-card">
+                    <div class="tv-history-heading"><span><i class="fa-solid fa-clock-rotate-left"></i> سجل تغييرات الزيت</span><span id="tv-history-count"></span></div>
+                    <div class="tv-history-scroll"><table class="tv-history-table">
+                        <thead><tr><th>#</th><th>التاريخ</th><th>الكيلومتراج</th><th>نوع الزيت</th><th>العلامة التجارية</th><th>الفلاتر</th><th>ملاحظات</th></tr></thead>
+                        <tbody id="tv-history-body"><tr><td colspan="7">ابحث عن سيارة لعرض سجلها.</td></tr></tbody>
+                    </table></div>
+                </section>
+            </div>
+            <div id="tv-record-list" style="display:none;margin-top:18px;"></div>
+            <!-- الجزء 15.2: نافذة تأكيد حذف السيارة -->
+            <div id="tv-delete-confirm" class="tv-confirm-overlay" hidden aria-hidden="true">
+                <section class="tv-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="tv-confirm-title" aria-describedby="tv-confirm-message">
+                    <div class="tv-confirm-icon"><i class="fa-solid fa-trash-can"></i></div>
+                    <h3 id="tv-confirm-title">تأكيد حذف السيارة</h3>
+                    <p id="tv-confirm-message">هل أنت متأكد من حذف السيارة نهائيًا؟</p>
+                    <div class="tv-confirm-actions">
+                        <button id="tv-confirm-delete" class="tv-confirm-delete" type="button"><i class="fa-solid fa-trash-can"></i> تأكيد الحذف</button>
+                        <button id="tv-confirm-cancel" class="tv-confirm-cancel" type="button">إلغاء</button>
+                    </div>
+                </section>
+            </div>
+        `;
+        if (recordsHeading) recordsView.replaceChildren(recordsHeading, recordsUi);
+        else recordsView.replaceChildren(recordsUi);
+        const responsiveStyle = document.createElement("style");
+        responsiveStyle.textContent = `
+            @media (max-width: 900px) {
+                #tv-functional-records .tv-car-info-grid { grid-template-columns:minmax(0,1fr) !important; }
+                #tv-functional-records .tv-detail-fields { grid-template-columns:minmax(95px,auto) minmax(0,1fr) !important; }
+            }
+            @media (max-width: 620px) {
+                #tv-functional-records .tv-search-row { flex-wrap:wrap; }
+                #tv-functional-records .tv-delete-button, #tv-functional-records .tv-search-button { flex:1 1 calc(50% - 6px); }
+                #tv-functional-records .tv-search-input-wrap { flex:1 1 100%; order:3; }
+                #tv-functional-records .tv-detail-fields { grid-template-columns:1fr !important; }
+            }
+        `;
+        recordsUi.appendChild(responsiveStyle);
+        const searchInput = recordsUi.querySelector("#tv-record-search");
+        const searchButton = recordsUi.querySelector("#tv-record-search-button");
+        const deleteButton = recordsUi.querySelector("#tv-record-delete");
+        const deleteConfirm = recordsUi.querySelector("#tv-delete-confirm");
+        const confirmMessage = recordsUi.querySelector("#tv-confirm-message");
+        const confirmDeleteButton = recordsUi.querySelector("#tv-confirm-delete");
+        const confirmCancelButton = recordsUi.querySelector("#tv-confirm-cancel");
+        const status = recordsUi.querySelector("#tv-record-status");
+        // الجزء 15.3: تأكيد حذف مخصص بدل نافذة المتصفح البيضاء.
+        function showDeleteConfirmation(carId) {
+            return new Promise(resolve => {
+                confirmMessage.textContent = `هل أنت متأكد من حذف السيارة ${carId} نهائيًا؟ سيتم حذف بياناتها من Google Sheets.`;
+                deleteConfirm.hidden = false;
+                deleteConfirm.setAttribute("aria-hidden", "false");
+                const finish = confirmed => {
+                    deleteConfirm.hidden = true;
+                    deleteConfirm.setAttribute("aria-hidden", "true");
+                    confirmDeleteButton.removeEventListener("click", onConfirm);
+                    confirmCancelButton.removeEventListener("click", onCancel);
+                    deleteConfirm.removeEventListener("click", onBackdrop);
+                    document.removeEventListener("keydown", onKeydown);
+                    resolve(confirmed);
+                };
+                const onConfirm = () => finish(true);
+                const onCancel = () => finish(false);
+                const onBackdrop = event => { if (event.target === deleteConfirm) finish(false); };
+                const onKeydown = event => { if (event.key === "Escape") finish(false); };
+                confirmDeleteButton.addEventListener("click", onConfirm);
+                confirmCancelButton.addEventListener("click", onCancel);
+                deleteConfirm.addEventListener("click", onBackdrop);
+                document.addEventListener("keydown", onKeydown);
+                confirmCancelButton.focus();
+            });
+        }
+        const results = recordsUi.querySelector("#tv-record-results");
+        const detail = recordsUi.querySelector("#tv-record-detail");
+        const list = recordsUi.querySelector("#tv-record-list");
+        const historyBody = recordsUi.querySelector("#tv-history-body");
+        const historyCount = recordsUi.querySelector("#tv-history-count");
+        let allCars = [];
+        let selectedCar = null;
+        let isLoadingCars = false;
+        const safeText = value => String(value == null || value === "" ? "—" : value);
+        const escapeHtml = value => String(value == null ? "" : value).replace(/[&<>"']/g, char => ({
+            "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+        }[char]));
+        const formatNumber = value => {
+            const number = Number(String(value ?? "").replace(/,/g, ""));
+            return value !== "" && value != null && Number.isFinite(number) ? number.toLocaleString("fr-FR") : safeText(value);
+        };
+        // الجزء 15.1: توحيد معرّف السيارة؛ يقبل الرقم فقط أو المعرّف الكامل.
+        const normalizeCarId = value => {
+            const raw = String(value ?? "").trim().toUpperCase().replace(/\s+/g, "");
+            if (/^\d+$/.test(raw)) return `CAR-${raw}`;
+            if (/^CAR\d+$/.test(raw)) return `CAR-${raw.slice(3)}`;
+            return raw;
+        };
+        const findCar = query => {
+            const q = normalizeCarId(query);
+            if (!q) return null;
+            return allCars.find(car => normalizeCarId(car.id) === q) || null;
+        };
+        function setStatus(message, isError = false) {
+            status.textContent = message;
+            status.classList.toggle("is-error", isError);
+        }
+        function renderCarList() {
+            // لا نعرض قائمة نتائج أو بطاقات؛ التفاصيل تظهر فقط بعد الضغط على بحث.
+            results.style.display = "none";
+            results.innerHTML = "";
+        }
+        function renderDetailFields(fields) {
+            return fields.map(([label, value, icon = ""]) => `
+                <div class="tv-field-label">${escapeHtml(label)}:</div>
+                <div class="tv-field-value">${escapeHtml(safeText(value))}${icon ? `<i class="${icon}"></i>` : ""}</div>`).join("");
+        }
+        function renderCarDetails(car) {
+            selectedCar = car;
+            detail.style.display = "block";
+            list.style.display = "none";
+            const leftFields = [
+                ["ID السيارة", car.id],
+                ["تاريخ الصيانة", formatDateForDisplay(car.maintenance_date)],
+                ["نوع السيارة", `${car.brand || ""} ${car.model || ""}`.trim()],
+                ["سنة الصنع", car.year]
+            ];
+            const rightFields = [
+                ["الكيلومتراج الحالية", car.mileage ? `${formatNumber(car.mileage)} كم` : "", "fa-solid fa-gauge-high"],
+                ["العلامة التجارية للزيت", car.oil_brand, "fa-solid fa-oil-can"],
+                ["تغيير القادم", car.next_service || (car.next_km ? `${formatNumber(car.next_km)} كم` : ""), "fa-regular fa-calendar-days"],
+                ["نوع الزيت الحالي", car.oil, "fa-solid fa-droplet"]
+            ];
+            recordsUi.querySelector("#tv-detail-fields-left").innerHTML = renderDetailFields(leftFields);
+            recordsUi.querySelector("#tv-detail-fields-right").innerHTML = renderDetailFields(rightFields);
+            const customerUrl = `https://zzako0902-lang.github.io/top-vidange00/customer.html?token=${encodeURIComponent(car.access_token || "")}`;
+            recordsUi.querySelector("#tv-detail-qr").src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(customerUrl)}`;
+            recordsUi.querySelector("#tv-detail-qr-id").textContent = `ID: ${car.id || "—"}`;
+            recordsUi.querySelector("#tv-open-customer-page").onclick = () => window.open(customerUrl, "_blank", "noopener");
+            deleteButton.disabled = false;
+            loadMaintenanceHistory(car.id);
+        }
+        function formatDateForDisplay(value) {
+            if (!value) return "—";
+            const raw = String(value).trim();
+            const dmy = raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+            if (dmy) return raw;
+            const ymd = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (ymd) return `${ymd[3]}/${ymd[2]}/${ymd[1]}`;
+            const parsed = new Date(raw);
+            return Number.isNaN(parsed.getTime()) ? raw : `${String(parsed.getDate()).padStart(2,"0")}/${String(parsed.getMonth()+1).padStart(2,"0")}/${parsed.getFullYear()}`;
+        }
+        async function loadMaintenanceHistory(carId) {
+            historyBody.innerHTML = `<tr><td colspan="7" class="tv-table-message">جاري تحميل سجل الصيانة...</td></tr>`;
+            historyCount.textContent = "";
+            try {
+                const token = selectedCar?.access_token || allCars.find(car => String(car.id) === String(carId))?.access_token || "";
+                if (!token) throw new Error("رمز QR لهذه السيارة غير موجود؛ أعد تحميل القائمة.");
+                const response = await fetch(`${recordsApiUrl}?action=history&token=${encodeURIComponent(token)}&_=${Date.now()}`, { cache: "no-store" });
+                if (!response.ok) throw new Error("تعذّر الاتصال بالخادم");
+                const data = await response.json();
+                if (!data.success || !Array.isArray(data.records)) throw new Error(data.message || "تعذّر قراءة سجل الصيانة");
+                historyCount.textContent = `عدد العمليات: ${data.records.length}`;
+                if (!data.records.length) {
+                    historyBody.innerHTML = `<tr><td colspan="7" class="tv-table-message">لا يوجد سجل صيانة محفوظ لهذه السيارة.</td></tr>`;
+                    return;
+                }
+                historyBody.innerHTML = data.records.map((record, index) => `<tr>
+                    <td>${index + 1}</td><td>${escapeHtml(formatDateForDisplay(record.maintenance_date))}</td>
+                    <td>${escapeHtml(formatNumber(record.mileage))} كم</td><td>${escapeHtml(safeText(record.oil))}</td>
+                    <td>${escapeHtml(safeText(record.oil_brand))}</td><td>${escapeHtml(safeText(record.filters))}</td>
+                    <td>${escapeHtml(safeText(record.notes))}</td></tr>`).join("");
+            } catch (error) {
+                historyCount.textContent = "";
+                historyBody.innerHTML = `<tr><td colspan="7" class="tv-table-message is-error">تعذّر تحميل السجل: ${escapeHtml(error.message)}</td></tr>`;
+            }
+        }
+        const sidebarSearch = document.getElementById("cars-sidebar-search");
+        const sidebarList = document.getElementById("cars-sidebar-list");
+        function renderSidebarCars(filter = "") {
+            if (!sidebarList) return;
+            const query = String(filter || "").trim().toLowerCase();
+            const matches = allCars.filter(car => {
+                const id = String(car.id || "").toLowerCase();
+                const name = `${car.brand || ""} ${car.model || ""}`.toLowerCase();
+                return !query || id.includes(query) || name.includes(query);
+            }).slice(0, 100);
+            sidebarList.innerHTML = matches.length ? matches.map(car => `
+                <button type="button" class="cars-sidebar-car" data-sidebar-car-id="${escapeHtml(car.id)}">
+                    <span class="cars-sidebar-car-icon"><i class="fa-solid fa-car-side"></i></span>
+                    <span class="cars-sidebar-car-text">
+                        <strong>${escapeHtml(car.id || "—")}</strong>
+                        <small>${escapeHtml(`${car.brand || ""} ${car.model || ""}`.trim() || "سيارة")}</small>
+                    </span>
+                </button>`).join("") : '<p class="cars-sidebar-empty">لا توجد سيارة مطابقة.</p>';
+            sidebarList.querySelectorAll("[data-sidebar-car-id]").forEach(button => {
+                button.addEventListener("click", () => {
+                    const car = allCars.find(item => String(item.id) === button.dataset.sidebarCarId);
+                    if (!car) return;
+                    searchInput.value = car.id;
+                    runSearch();
+                    sidebarList.querySelectorAll(".cars-sidebar-car").forEach(item => item.classList.toggle("active", item === button));
+                });
+            });
+        }
+        sidebarSearch?.addEventListener("input", () => renderSidebarCars(sidebarSearch.value));
+        document.getElementById("nav-car-records")?.addEventListener("click", async () => {
+            if (!allCars.length) await loadAllCars();
+            renderSidebarCars(sidebarSearch?.value || "");
+        });
+        async function loadAllCars() {
+            if (isLoadingCars) return false;
+            isLoadingCars = true;
+            setStatus("جاري تحميل السيارات من Google Sheets...");
+            try {
+                const adminPin = getAdminPin();
+                if (!adminPin) throw new Error("يلزم إدخال الرقم السري للإدارة.");
+                const response = await fetch(`${recordsApiUrl}?action=list&adminPin=${encodeURIComponent(adminPin)}&_=${Date.now()}`, { cache: "no-store" });
+                if (!response.ok) throw new Error("تعذّر الاتصال بالخادم");
+                const data = await response.json();
+                if (!data.success || !Array.isArray(data.cars)) throw new Error(data.message || "استجابة غير صالحة من Google Sheets");
+                allCars = data.cars;
+                renderSidebarCars(sidebarSearch?.value || "");
+                setStatus(allCars.length ? "أدخل أرقام السيارة فقط؛ مثال 0090 للمعرّف CAR-0090." : "لا توجد سيارات مسجلة في الجدول.");
+                return true;
+            } catch (error) {
+                setStatus(`تعذّر تحميل السيارات: ${error.message}. تأكد من نشر نسخة Apps Script التي تدعم action=list.`, true);
+                return false;
+            } finally {
+                isLoadingCars = false;
+            }
+        }
+        async function runSearch() {
+            const query = searchInput.value.trim();
+            searchButton.disabled = true;
+            try {
+                if (!allCars.length) {
+                    const loaded = await loadAllCars();
+                    if (!loaded) return;
+                }
+                if (!query) {
+                    selectedCar = null;
+                    detail.style.display = "none";
+                    results.style.display = "none";
+                    setStatus("اكتب أرقام السيارة فقط ثم اضغط بحث.", true);
+                    return;
+                }
+                renderCarList(query);
+                const car = findCar(query);
+                if (!car) {
+                    selectedCar = null;
+                    detail.style.display = "none";
+                    setStatus("لم يتم العثور على سيارة مطابقة. تحقق من ID السيارة.", true);
+                    return;
+                }
+                renderCarDetails(car);
+                setStatus(`تم العثور على السيارة ${car.id}.`);
+            } finally {
+                searchButton.disabled = false;
+            }
+        }
+        searchButton.addEventListener("click", runSearch);
+        searchInput.addEventListener("keydown", event => {
+            if (event.key === "Enter") { event.preventDefault(); runSearch(); }
+        });
+        searchInput.addEventListener("input", () => {
+            results.style.display = "none";
+            results.innerHTML = "";
+            if (selectedCar) {
+                selectedCar = null;
+                detail.style.display = "none";
+            }
+            setStatus("أدخل أرقام السيارة فقط؛ مثال 0090 للمعرّف CAR-0090 ثم اضغط بحث.");
+        });
+        results.addEventListener("click", event => {
+            const button = event.target.closest("[data-select-car]");
+            if (!button) return;
+            const car = allCars.find(item => String(item.id) === button.dataset.selectCar);
+            if (car) { searchInput.value = car.id; renderCarDetails(car); setStatus(`تم اختيار السيارة ${car.id}.`); }
+        });
+        deleteButton.addEventListener("click", async () => {
+            const car = selectedCar || findCar(searchInput.value);
+            if (!car || !car.id) {
+                setStatus("ابحث عن السيارة أولًا قبل حذفها.", true);
+                return;
+            }
+            const confirmed = await showDeleteConfirmation(car.id);
+            if (!confirmed) return;
+            deleteButton.disabled = true;
+            const original = deleteButton.innerHTML;
+            deleteButton.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>جارٍ الحذف...</span>`;
+            setStatus(`جارٍ إرسال طلب حذف السيارة ${car.id}...`);
+            try {
+                const adminPin = getAdminPin();
+                if (!adminPin) throw new Error("يلزم إدخال الرقم السري للإدارة.");
+                await fetch(recordsApiUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: "deleteCar", adminPin, id: String(car.id), deleteHistory: true })
+                });
+                // نتحقق من النتيجة بإعادة قراءة القائمة بدل الادعاء بالنجاح.
+                allCars = [];
+                const loaded = await loadAllCars();
+                const stillExists = loaded && allCars.some(item => String(item.id).trim() === String(car.id).trim());
+                if (loaded && !stillExists) {
+                    selectedCar = null;
+                    searchInput.value = "";
+                    detail.style.display = "none";
+                    results.style.display = "none";
+                    setStatus(`تم التأكد من حذف السيارة ${car.id} من القائمة.`);
+                } else if (loaded && stillExists) {
+                    setStatus("لم يتأكد حذف السيارة. غالبًا أن Apps Script لا يدعم action=deleteCar بعد؛ يلزم إضافة الحذف في Code.gs.", true);
+                }
+            } catch (error) {
+                setStatus(`تعذّر إرسال طلب الحذف: ${error.message}`, true);
+            } finally {
+                deleteButton.disabled = false;
+                deleteButton.innerHTML = original;
+            }
+        });
+        recordsUi.querySelector("#tv-edit-car").addEventListener("click", () => {
+            if (!selectedCar) return;
+            if (carBrandSelect) carBrandSelect.value = selectedCar.brand || "";
+            if (carModelSelect) carModelSelect.value = selectedCar.model || "";
+            if (engineCapacitySelect) engineCapacitySelect.value = selectedCar.engine || "";
+            if (prodYearInput) prodYearInput.value = selectedCar.year || "";
+            if (currentKmInput) currentKmInput.value = selectedCar.mileage || "";
+            if (filterTypeSelect) filterTypeSelect.value = selectedCar.filters || "";
+            if (oilTypeSelect) oilTypeSelect.value = selectedCar.oil || "";
+            if (oilBrandSelect) oilBrandSelect.value = selectedCar.oil_brand || "";
+            if (nextVisitKmInput) nextVisitKmInput.value = selectedCar.next_km || "";
+            if (maintenanceDateInput) {
+                const rawDate = String(selectedCar.maintenance_date || "").trim();
+                const dmy = rawDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+                const ymd = rawDate.match(/^(\d{4})-(\d{2})-(\d{2})/);
+                if (dmy) maintenanceDateInput.value = `${dmy[3]}-${dmy[2]}-${dmy[1]}`;
+                else if (ymd) maintenanceDateInput.value = `${ymd[1]}-${ymd[2]}-${ymd[3]}`;
+                else {
+                    const parsed = new Date(rawDate);
+                    if (!rawDate || Number.isNaN(parsed.getTime())) {
+                        const today = new Date();
+                        maintenanceDateInput.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+                    } else maintenanceDateInput.value = `${parsed.getFullYear()}-${String(parsed.getMonth()+1).padStart(2,"0")}-${String(parsed.getDate()).padStart(2,"0")}`;
+                }
+            }
+            if (notesInput) notesInput.value = selectedCar.notes || "";
+            localStorage.setItem("topVidangeCurrentCarId", String(selectedCar.id));
+            localStorage.setItem("topVidangeCurrentCarData", JSON.stringify(selectedCar));
+            if (carIdDisplay) carIdDisplay.textContent = `معرّف السيارة: ${selectedCar.id}`;
+            // عرض رمز QR نفسه المرتبط بمعرّف السيارة؛ لا ننشئ سيارة أو معرّفًا جديدًا.
+            const customerUrl = `https://zzako0902-lang.github.io/top-vidange00/customer.html?id=${encodeURIComponent(selectedCar.id)}`;
+            const stableQrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(customerUrl);
+            if (realQrImg) { realQrImg.src = stableQrUrl; realQrImg.style.display = "block"; }
+            if (qrEmptyIcon) qrEmptyIcon.style.display = "none";
+            if (actionButtonsArea) actionButtonsArea.style.display = "flex";
+            if (readyBadge) readyBadge.style.display = "inline-block";
+            if (successMessageBox) successMessageBox.style.display = "none";
+            const qrSubtext = document.querySelector(".qr-subtext");
+            if (qrSubtext) qrSubtext.textContent = "رمز QR ثابت لهذه السيارة ولا يتغير عند تحديث بيانات الصيانة.";
+            if (generateQrButton) generateQrButton.style.display = "none";
+            if (updateCarButton) { updateCarButton.style.display = "flex"; updateCarButton.innerHTML = '<i class="fa-solid fa-rotate"></i> تحديث بيانات السيارة فقط'; }
+            // قفل البيانات الأساسية في وضع التحديث.
+            if (carBrandSelect) { carBrandSelect.readOnly = true; carBrandSelect.style.pointerEvents = "none"; }
+            if (carModelSelect) { carModelSelect.readOnly = true; carModelSelect.style.pointerEvents = "none"; }
+            if (engineCapacitySelect) engineCapacitySelect.disabled = true;
+            if (prodYearInput) prodYearInput.readOnly = true;
+            document.getElementById("car-brand-suggestions")?.style.setProperty("display", "none");
+            document.getElementById("car-model-suggestions")?.style.setProperty("display", "none");
+            updateLivePreview();
+            window.dispatchEvent(new CustomEvent("tv-show-view", { detail: "update" }));
+            setStatus("تم تحميل السيارة للتحديث. نوع السيارة والموديل والبيانات الأساسية ثابتة.");
+        });
+        setStatus("واجهة بيانات السيارات جاهزة. أدخل ID السيارة ثم اضغط بحث.");
+    }
+});
+</script>
+    <script>
+    // الجزء 16: توحيد تسميات واجهة بيانات السيارة؛ لا يغيّر الألوان أو بنية التصميم.
+    document.addEventListener('DOMContentLoaded', function () {
+        const relabel = () => {
+            const root = document.getElementById('car-records-view');
+            if (!root) return;
+            root.querySelectorAll('p, small, h3, th, span, label').forEach(el => {
+                const t = (el.textContent || '').trim();
+                if (t === 'موعد الصيانة القادم') el.textContent = 'تغيير القادم';
+                else if (t === 'الكيلومترات الحالية' || t === 'عدد الكيلومترات الحالية') el.textContent = 'الكيلومتراج الحالية';
+                else if (t === 'آخر تغيير زيت') el.textContent = 'العلامة التجارية للزيت';
+                else if (t === 'آخر صيانة') el.textContent = 'تاريخ الصيانة';
+                else if (t === 'الكيلومترات القادمة') el.textContent = 'تغيير القادم';
+            });
+        };
+        relabel();
+        new MutationObserver(relabel).observe(document.getElementById('car-records-view') || document.body, {childList:true, subtree:true});
+    });
+    </script>
+    <script>
+    // الجزء 17: التنقل بين واجهة إضافة السيارة وواجهة بيانات السيارات.
+    document.addEventListener('DOMContentLoaded', function () {
+        const addButton = document.getElementById('nav-add-car');
+        const recordsButton = document.getElementById('nav-car-records');
+        const addSection = document.querySelector('.data-entry-section');
+        const qrSection = document.querySelector('.qr-preview-section');
+        const recordsSection = document.getElementById('car-records-view');
+        if (!addButton || !recordsButton || !addSection || !qrSection || !recordsSection) return;
+        const dashboard = document.querySelector('.dashboard-container');
+        const formTitle = addSection.querySelector('.section-title h2');
+        const formSubtitle = addSection.querySelector('.section-title p');
+        const originalTitle = formTitle?.textContent.trim() || 'إضافة سيارة جديدة';
+        const originalSubtitle = formSubtitle?.textContent.trim() || 'أدخل بيانات السيارة ثم أنشئ رمز QR لربطه بالسيارة';
+        const form = document.getElementById('car-form');
+        const generateButton = document.getElementById('generate-qr-button');
+        const updateButton = document.getElementById('update-car-button');
+        const brandInput = document.getElementById('car-brand');
+        const modelInput = document.getElementById('car-model');
+        const engineSelect = document.getElementById('engine-capacity');
+        const yearInput = document.getElementById('prod-year');
+        function showView(view) {
+            const wasUpdate = dashboard?.classList.contains('update-mode') || false;
+            const isRecords = view === 'records';
+            const isUpdate = view === 'update';
+            dashboard?.classList.toggle('records-mode', isRecords || isUpdate);
+            dashboard?.classList.toggle('update-mode', isUpdate);
+            addSection.style.display = (isRecords ? 'none' : '');
+            qrSection.style.display = (isRecords ? 'none' : '');
+            recordsSection.style.display = (isRecords || isUpdate) ? (isUpdate ? 'none' : 'block') : 'none';
+            addButton.classList.toggle('active', !isRecords && !isUpdate);
+            recordsButton.classList.toggle('active', isRecords || isUpdate);
+            addButton.querySelector('.active-dot')?.remove();
+            if (!isRecords && !isUpdate && !addButton.querySelector('.active-dot')) {
+                const dot = document.createElement('span');
+                dot.className = 'active-dot';
+                addButton.appendChild(dot);
+            }
+            if (formTitle) formTitle.textContent = isUpdate ? 'تحديث بيانات السيارة' : originalTitle;
+            if (formSubtitle) formSubtitle.textContent = isUpdate ? 'تحديث بيانات الصيانة للسيارة المحددة دون تغيير معلوماتها الأساسية' : originalSubtitle;
+            if (generateButton) generateButton.style.display = isUpdate ? 'none' : '';
+            if (updateButton) {
+                if (isUpdate) updateButton.style.display = 'flex';
+                else if (wasUpdate) updateButton.style.display = 'none';
+            }
+            if (brandInput) { brandInput.readOnly = isUpdate; brandInput.style.pointerEvents = isUpdate ? 'none' : ''; }
+            if (modelInput) { modelInput.readOnly = isUpdate; modelInput.style.pointerEvents = isUpdate ? 'none' : ''; }
+            if (engineSelect) engineSelect.disabled = isUpdate;
+            if (yearInput) yearInput.readOnly = isUpdate;
+            if (!isUpdate) {
+                const qrSubtext = document.querySelector('.qr-subtext');
+                if (qrSubtext) qrSubtext.textContent = 'أدخل بيانات السيارة ثم اضغط على زر الإنشاء لولادة الرمز العالمي.';
+                document.getElementById('car-brand-suggestions')?.style.removeProperty('display');
+                document.getElementById('car-model-suggestions')?.style.removeProperty('display');
+            }
+        }
+        addButton.addEventListener('click', () => showView('add'));
+        recordsButton.addEventListener('click', () => showView('records'));
+        window.addEventListener('tv-show-view', event => showView(event.detail));
+    });
+    </script>
+
+<style id="tv-overflow-protection">
+/* تثبيت أبعاد الواجهة حتى مع إدخال أرقام طويلة؛ دون تغيير الألوان أو التصميم. */
+.dashboard-container,
+.dashboard-container > *,
+.dashboard-container .data-entry-section,
+.dashboard-container .qr-preview-section,
+.dashboard-container .cars-sidebar,
+.form-grid, .form-grid > *, .form-column, .input-group,
+.input-group > *, .date-input-wrapper, .gauge-input-wrapper,
+.select-wrapper, .qr-card-container, .car-summary-badge,
+.badge-right-info, .car-badge-meta {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.dashboard-container {
+  grid-template-columns: 190px minmax(0, 1.6fr) minmax(0, 1fr);
+}
+.input-group input, .input-group select, .input-group textarea,
+.date-input-wrapper input, .gauge-input-wrapper input {
+  width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box;
+}
+.input-group input, .input-group select, .input-group textarea,
+.car-summary-badge, .car-badge-meta, .tv-field-value {
+  overflow: hidden; text-overflow: ellipsis;
+}
+.car-summary-badge *, .car-badge-meta *, #tv-detail-fields p,
+#tv-detail-fields small, #tv-functional-records .tv-field-value {
+  min-width: 0; overflow-wrap: anywhere; word-break: break-word;
+}
+#current-km, #next-visit-km, #prod-year {
+  min-width: 0 !important; max-width: 100% !important;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 1100px) {
+  .dashboard-container { grid-template-columns: 175px minmax(0, 1fr); }
+}
+@media (max-width: 750px) {
+  .dashboard-container { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+<script id="tv-year-length-guard">
+document.addEventListener('DOMContentLoaded', function () {
+  const year = document.getElementById('prod-year');
+  const nextKm = document.getElementById('next-visit-km');
+  const currentKm = document.getElementById('current-km');
+  if (year) year.setAttribute('maxlength', '4');
+  if (nextKm) {
+    nextKm.setAttribute('maxlength', '31');
+    nextKm.setAttribute('inputmode', 'numeric');
+    nextKm.addEventListener('input', function () {
+      const digits = String(nextKm.value).replace(/\D/g, '').slice(0, 31);
+      if (nextKm.value !== digits) nextKm.value = digits;
+    });
+  }
+  if (currentKm) currentKm.setAttribute('max', '9999999999999999999999999999999');
+  if (!year) return;
+  year.setAttribute('inputmode', 'numeric');
+  year.addEventListener('input', function () {
+    const digits = String(year.value).replace(/\D/g, '').slice(0, 4);
+    if (year.value !== digits) year.value = digits;
+  });
+});
 </script>
 
 </body>
