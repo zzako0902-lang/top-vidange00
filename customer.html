@@ -338,7 +338,7 @@
             new URLSearchParams(window.location.search);
 
         const accessToken = urlParams.get("token") || "";
-        const carId = urlParams.get("id") || "";
+        let carId = urlParams.get("id") || "";
 
 
         const brandElement =
@@ -414,6 +414,7 @@
                 const payload = await response.json();
                 if (!payload.success || !payload.car) throw new Error(payload.message || "CAR_NOT_FOUND");
                 const source = payload.car;
+                carId = String(source.id || carId || "");
                 const carData = {
                     ID: source.id, BRAND: source.brand, MODEL: source.model, YEAR: source.year,
                     ENGINE: source.engine, MILEAGE: source.mileage, OIL: source.oil,
@@ -531,14 +532,14 @@
         // الجزء 10A: تحميل سجل الصيانة من Apps Script.
         // يتطلب هذا الجزء تحديث Apps Script لاحقًا لإرجاع JSON عند استخدام ?history=1&id=...
         async function loadMaintenanceHistory() {
-            if (!carId) {
-                showHistoryMessage("تعذّر تحديد السيارة لعرض سجل الصيانة.");
+            if (!accessToken) {
+                showHistoryMessage("رابط QR غير صالح.");
                 return;
             }
 
             try {
-                const historyUrl = APPS_SCRIPT_URL + "?action=history&token=" + encodeURIComponent(accessToken);
-                const response = await fetch(historyUrl);
+                const historyUrl = APPS_SCRIPT_URL + "?action=history&token=" + encodeURIComponent(accessToken) + "&_=" + Date.now();
+                const response = await fetch(historyUrl, { cache: "no-store" });
                 if (!response.ok) throw new Error("HTTP " + response.status);
 
                 const responseText = await response.text();
@@ -549,9 +550,12 @@
                     throw new Error("الواجهة البرمجية لا تُرجع سجلًا تاريخيًا بصيغة JSON بعد.");
                 }
 
+                if (payload.success === false) {
+                    throw new Error(payload.message || "تعذّر تحميل سجل الصيانة");
+                }
                 const records = Array.isArray(payload)
                     ? payload
-                    : (payload.history || payload.records || payload.data || []);
+                    : (payload.records || payload.history || payload.data || []);
 
                 if (!Array.isArray(records) || records.length === 0) {
                     historyCountElement.textContent = "لا توجد عمليات صيانة مسجلة بعد";
