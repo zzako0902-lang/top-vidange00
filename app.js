@@ -36,12 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
         "https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec";
     // رقم الإدارة يبقى في sessionStorage حتى إغلاق تبويب الإدارة، ولا يُحفظ في الرابط إلا لطلب القائمة بسبب قيود CORS في Apps Script.
     const getAdminPin = () => {
-        let pin = sessionStorage.getItem("topVidangeAdminPin") || "";
-        if (!pin) {
-            pin = window.prompt("أدخل الرقم السري لصاحب المحل للاتصال بالنظام:") || "";
-            if (pin) sessionStorage.setItem("topVidangeAdminPin", pin);
-        }
-        return pin.trim();
+        if (sessionStorage.getItem("topVidangeAdminVerified") !== "1") return "";
+        return (sessionStorage.getItem("topVidangeAdminPin") || "").trim();
     };
     const createAccessToken = () => {
         const bytes = new Uint8Array(32);
