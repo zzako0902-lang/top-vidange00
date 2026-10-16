@@ -1585,8 +1585,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
         }
     </style>
 
+
+<style id="tv-admin-auth-lock">
+html,body{min-height:100%;}
+body:not(.tv-admin-authenticated)>:not(#tv-admin-lock){display:none!important;}
+#tv-admin-lock{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:#001222;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl}
+#tv-admin-lock .tv-login-card{width:min(100%,390px);padding:30px;border:1px solid #0c3153;border-radius:18px;background:#001a30;box-shadow:0 18px 60px #0008;text-align:center}
+#tv-admin-lock h1{font-size:24px;margin:0 0 8px}#tv-admin-lock p{color:#9bb5cf;margin:0 0 22px;font-size:14px}
+#tv-admin-lock input{width:100%;padding:13px 14px;border:1px solid #31516e;border-radius:10px;background:#071d31;color:white;font-size:18px;outline:none;margin-bottom:12px;text-align:center;box-sizing:border-box}
+#tv-admin-lock button{width:100%;padding:13px;border:0;border-radius:10px;background:#ffce00;color:#111;font-size:16px;font-weight:700;cursor:pointer}
+#tv-admin-lock .tv-login-error{min-height:22px;margin-top:12px;color:#ff8585;font-size:13px}
+</style>
 </head>
 <body>
+<div id="tv-admin-lock" role="dialog" aria-modal="true" aria-labelledby="tv-login-title">
+ <form class="tv-login-card" id="tv-admin-login-form">
+  <h1 id="tv-login-title">TOP-VIDANGE</h1><p>دخول صاحب المحل — أدخل الرقم السري للمتابعة</p>
+  <input id="tv-admin-pin-input" type="password" inputmode="numeric" autocomplete="current-password" placeholder="الرقم السري" required autofocus>
+  <button id="tv-admin-login-button" type="submit">دخول آمن</button>
+  <div id="tv-admin-login-error" class="tv-login-error" role="status" aria-live="polite"></div>
+ </form>
+</div>
+
     <!-- =====================================================
          الشريط العلوي
     ====================================================== -->
@@ -2293,12 +2313,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const APPS_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec";
     const getAdminPin = () => {
-        let pin = sessionStorage.getItem("topVidangeAdminPin") || "";
-        if (!pin) {
-            pin = (window.prompt("أدخل الرقم السري لصاحب المحل:") || "").trim();
-            if (pin) sessionStorage.setItem("topVidangeAdminPin", pin);
-        }
-        return pin.trim();
+        if (sessionStorage.getItem("topVidangeAdminVerified") !== "1") return "";
+        return (sessionStorage.getItem("topVidangeAdminPin") || "").trim();
     };
     const createAccessToken = () => {
         const bytes = new Uint8Array(32);
@@ -3529,7 +3545,42 @@ if (updateCarButton) {
                                 window.print();
                             };
                         <\\/script>
-                    </body>
+                    
+<script id="tv-admin-auth-gate">
+(function(){
+ const endpoint='https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec';
+ const form=document.getElementById('tv-admin-login-form');
+ const input=document.getElementById('tv-admin-pin-input');
+ const button=document.getElementById('tv-admin-login-button');
+ const error=document.getElementById('tv-admin-login-error');
+ let checking=false;
+ async function verify(pin){
+  const url=endpoint+'?action=list&adminPin='+encodeURIComponent(pin)+'&_='+Date.now();
+  const response=await fetch(url,{method:'GET',cache:'no-store',credentials:'omit'});
+  if(!response.ok) throw new Error('تعذر الاتصال بالخادم');
+  const data=await response.json();
+  return data && data.success===true && Array.isArray(data.cars);
+ }
+ async function tryPin(pin){
+  if(checking||!pin) return;
+  checking=true; button.disabled=true; button.textContent='جارٍ التحقق…'; error.textContent='';
+  try{
+   if(!await verify(pin)){sessionStorage.removeItem('topVidangeAdminPin');sessionStorage.removeItem('topVidangeAdminVerified');error.textContent='الرقم السري غير صحيح.';input.value='';input.focus();return;}
+   sessionStorage.setItem('topVidangeAdminPin',pin);
+   sessionStorage.setItem('topVidangeAdminVerified','1');
+   document.body.classList.add('tv-admin-authenticated');
+   document.getElementById('tv-admin-lock').remove();
+   window.dispatchEvent(new CustomEvent('tv-admin-authenticated'));
+  }catch(e){error.textContent='تعذر التحقق من الخادم. تحقق من الإنترنت ثم أعد المحاولة.';}
+  finally{checking=false;button.disabled=false;button.textContent='دخول آمن';}
+ }
+ form.addEventListener('submit',e=>{e.preventDefault();tryPin(input.value.trim());});
+ // Session PIN is revalidated on every page load; never trust storage alone.
+ const saved=sessionStorage.getItem('topVidangeAdminPin');
+ if(saved) tryPin(saved); else input.focus();
+})();
+</script>
+</body>
                     </html>
                 `);
                 qrWindow.document.close();
@@ -4130,8 +4181,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const digits = String(year.value).replace(/\D/g, '').slice(0, 4);
     if (year.value !== digits) year.value = digits;
   });
-});
+  });
 </script>
 
 </body>
 </html>
+ 
