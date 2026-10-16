@@ -1586,26 +1586,39 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     </style>
 
 
-<style id="tv-admin-auth-lock">
-html,body{min-height:100%;}
-body:not(.tv-admin-authenticated)>:not(#tv-admin-lock){display:none!important;}
-#tv-admin-lock{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:#001222;color:#fff;font-family:'Segoe UI',Tahoma,sans-serif;direction:rtl}
-#tv-admin-lock .tv-login-card{width:min(100%,390px);padding:30px;border:1px solid #0c3153;border-radius:18px;background:#001a30;box-shadow:0 18px 60px #0008;text-align:center}
-#tv-admin-lock h1{font-size:24px;margin:0 0 8px}#tv-admin-lock p{color:#9bb5cf;margin:0 0 22px;font-size:14px}
-#tv-admin-lock input{width:100%;padding:13px 14px;border:1px solid #31516e;border-radius:10px;background:#071d31;color:white;font-size:18px;outline:none;margin-bottom:12px;text-align:center;box-sizing:border-box}
-#tv-admin-lock button{width:100%;padding:13px;border:0;border-radius:10px;background:#ffce00;color:#111;font-size:16px;font-weight:700;cursor:pointer}
-#tv-admin-lock .tv-login-error{min-height:22px;margin-top:12px;color:#ff8585;font-size:13px}
+<style id="tv-auth-lock-style">
+html,body{min-height:100%;} body:not(.tv-auth-ok)>:not(#tv-auth-gate){display:none!important;}
+#tv-auth-gate{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse at bottom,#3569bc 0%,#06163d 70%,#020817 100%);font-family:Tahoma,Arial,sans-serif;color:#fff}
+#tv-auth-gate .tv-auth-card{width:min(100%,360px);padding:28px 22px;border:1px solid #ffffff30;border-radius:18px;background:#1754a8d9;box-shadow:0 18px 55px #0005;text-align:center}
+#tv-auth-gate h2{margin:0 0 10px;font-size:24px}#tv-auth-gate p{margin:0 0 18px;font-size:13px;color:#e3edff}
+#tv-auth-pin{width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid #c5d9ff;border-radius:9px;background:#fff;color:#111;font-size:18px;text-align:center;outline:none}
+#tv-auth-submit{width:100%;margin-top:12px;padding:13px;border:0;border-radius:9px;background:#ffce00;color:#202020;font-weight:700;font-size:15px;cursor:pointer}
+#tv-auth-submit:disabled{opacity:.65;cursor:wait}#tv-auth-message{min-height:22px;margin:12px 0 0!important;color:#ffe5e5!important;font-weight:700}
 </style>
+
 </head>
 <body>
-<div id="tv-admin-lock" role="dialog" aria-modal="true" aria-labelledby="tv-login-title">
- <form class="tv-login-card" id="tv-admin-login-form">
-  <h1 id="tv-login-title">TOP-VIDANGE</h1><p>دخول صاحب المحل — أدخل الرقم السري للمتابعة</p>
-  <input id="tv-admin-pin-input" type="password" inputmode="numeric" autocomplete="current-password" placeholder="الرقم السري" required autofocus>
-  <button id="tv-admin-login-button" type="submit">دخول آمن</button>
-  <div id="tv-admin-login-error" class="tv-login-error" role="status" aria-live="polite"></div>
+
+<div id="tv-auth-gate" role="dialog" aria-modal="true" aria-labelledby="tv-auth-title">
+ <form class="tv-auth-card" id="tv-auth-form">
+  <h2 id="tv-auth-title">TOP-VIDANGE</h2>
+  <p>دخول صاحب المحل — أدخل الرقم السري للمتابعة</p>
+  <input id="tv-auth-pin" type="password" inputmode="numeric" autocomplete="off" placeholder="الرقم السري" required aria-label="الرقم السري">
+  <button id="tv-auth-submit" type="submit">دخول آمن</button>
+  <p id="tv-auth-message" role="alert" aria-live="polite"></p>
  </form>
 </div>
+<script id="tv-auth-gate-script">
+(function(){
+ const API='https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec';
+ const form=document.getElementById('tv-auth-form'),pinInput=document.getElementById('tv-auth-pin'),button=document.getElementById('tv-auth-submit'),message=document.getElementById('tv-auth-message');
+ try{sessionStorage.removeItem('topVidangeAdminPin')}catch(e){}
+ document.body.classList.remove('tv-auth-ok');
+ form.addEventListener('submit',async function(e){e.preventDefault();const pin=pinInput.value.trim();if(!pin){message.textContent='أدخل الرقم السري.';return;}button.disabled=true;button.textContent='جارٍ التحقق...';message.textContent='';
+ try{const url=API+'?action=list&adminPin='+encodeURIComponent(pin)+'&_='+Date.now();const response=await fetch(url,{method:'GET',cache:'no-store',redirect:'follow'});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();if(data&&data.success===true&&Array.isArray(data.cars)){sessionStorage.setItem('topVidangeAdminPin',pin);document.body.classList.add('tv-auth-ok');document.getElementById('tv-auth-gate').remove();window.dispatchEvent(new CustomEvent('tv-admin-authenticated'));}else{sessionStorage.removeItem('topVidangeAdminPin');message.textContent='الرقم السري خاطئ أو تم رفض الدخول.';pinInput.value='';pinInput.focus();}}catch(err){sessionStorage.removeItem('topVidangeAdminPin');message.textContent='تعذر التحقق من الخادم. تحقق من الإنترنت وإعدادات النشر ثم أعد المحاولة.';console.error('TV auth check failed',err);}finally{button.disabled=false;button.textContent='دخول آمن';}
+ });
+})();
+</script>
 
     <!-- =====================================================
          الشريط العلوي
@@ -2312,10 +2325,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================================
     const APPS_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec";
-    const getAdminPin = () => {
-        if (sessionStorage.getItem("topVidangeAdminVerified") !== "1") return "";
-        return (sessionStorage.getItem("topVidangeAdminPin") || "").trim();
-    };
+    const getAdminPin = () => (sessionStorage.getItem("topVidangeAdminPin") || "").trim();
     const createAccessToken = () => {
         const bytes = new Uint8Array(32);
         crypto.getRandomValues(bytes);
@@ -3545,42 +3555,7 @@ if (updateCarButton) {
                                 window.print();
                             };
                         <\\/script>
-                    
-<script id="tv-admin-auth-gate">
-(function(){
- const endpoint='https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec';
- const form=document.getElementById('tv-admin-login-form');
- const input=document.getElementById('tv-admin-pin-input');
- const button=document.getElementById('tv-admin-login-button');
- const error=document.getElementById('tv-admin-login-error');
- let checking=false;
- async function verify(pin){
-  const url=endpoint+'?action=list&adminPin='+encodeURIComponent(pin)+'&_='+Date.now();
-  const response=await fetch(url,{method:'GET',cache:'no-store',credentials:'omit'});
-  if(!response.ok) throw new Error('تعذر الاتصال بالخادم');
-  const data=await response.json();
-  return data && data.success===true && Array.isArray(data.cars);
- }
- async function tryPin(pin){
-  if(checking||!pin) return;
-  checking=true; button.disabled=true; button.textContent='جارٍ التحقق…'; error.textContent='';
-  try{
-   if(!await verify(pin)){sessionStorage.removeItem('topVidangeAdminPin');sessionStorage.removeItem('topVidangeAdminVerified');error.textContent='الرقم السري غير صحيح.';input.value='';input.focus();return;}
-   sessionStorage.setItem('topVidangeAdminPin',pin);
-   sessionStorage.setItem('topVidangeAdminVerified','1');
-   document.body.classList.add('tv-admin-authenticated');
-   document.getElementById('tv-admin-lock').remove();
-   window.dispatchEvent(new CustomEvent('tv-admin-authenticated'));
-  }catch(e){error.textContent='تعذر التحقق من الخادم. تحقق من الإنترنت ثم أعد المحاولة.';}
-  finally{checking=false;button.disabled=false;button.textContent='دخول آمن';}
- }
- form.addEventListener('submit',e=>{e.preventDefault();tryPin(input.value.trim());});
- // Session PIN is revalidated on every page load; never trust storage alone.
- const saved=sessionStorage.getItem('topVidangeAdminPin');
- if(saved) tryPin(saved); else input.focus();
-})();
-</script>
-</body>
+                    </body>
                     </html>
                 `);
                 qrWindow.document.close();
@@ -4181,9 +4156,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const digits = String(year.value).replace(/\D/g, '').slice(0, 4);
     if (year.value !== digits) year.value = digits;
   });
-  });
+});
 </script>
 
 </body>
 </html>
- 
