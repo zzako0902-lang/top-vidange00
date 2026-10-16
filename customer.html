@@ -331,14 +331,14 @@
     <script>
 
         const APPS_SCRIPT_URL =
-            "https://script.google.com/macros/s/AKfycbwwy9GQPTeYWot3QuzIPWoe8ufb8lBPqihoEy1Ankq72GpbfO7cLFTrqbYvQheG-_gfVA/exec";
+            "https://script.google.com/macros/s/AKfycbz4qV9dMOMCVZLwYsiesjsls94PxlJrNQxdwTmZxfJ-r6L-LUHDA7gqEbwDxgqVyBxhjw/exec";
 
 
         const urlParams =
             new URLSearchParams(window.location.search);
 
-        const carId =
-            urlParams.get("id");
+        const accessToken = urlParams.get("token") || "";
+        const carId = urlParams.get("id") || "";
 
 
         const brandElement =
@@ -394,23 +394,13 @@
         const historyCountElement = document.getElementById("history-count");
 
 
-        if (!carId) {
-
-            brandElement.textContent =
-                "خطأ";
-
-            modelElement.textContent =
-                "لم يتم العثور على رقم السيارة";
-            showHistoryMessage("افتح رابط السيارة عبر رمز QR لعرض سجل الصيانة.");
-
+        if (!accessToken) {
+            brandElement.textContent = "خطأ";
+            modelElement.textContent = "افتح رابط السيارة عبر رمز QR الصحيح";
+            showHistoryMessage("يجب فتح الصفحة من رمز QR الخاص بالسيارة.");
         } else {
-
-            idElement.textContent =
-                carId;
-
             loadCarData();
             loadMaintenanceHistory();
-
         }
 
 
@@ -418,58 +408,19 @@
 
             try {
 
-                const response =
-                    await fetch(
-                        APPS_SCRIPT_URL +
-                        "?id=" +
-                        encodeURIComponent(carId)
-                    );
-
-
-                const text =
-                    await response.text();
-
-
-                console.log("Google Response:");
-                console.log(text);
-
-
-                const lines =
-                    text.split("\n");
-
-
-                const carData = {};
-
-
-                lines.forEach(line => {
-
-                    const separator =
-                        line.indexOf(":");
-
-
-                    if (separator === -1) {
-                        return;
-                    }
-
-
-                    const key =
-                        line.substring(
-                            0,
-                            separator
-                        ).trim();
-
-
-                    const value =
-                        line.substring(
-                            separator + 1
-                        ).trim();
-
-
-                    carData[key] =
-                        value;
-
-                });
-
+                const response = await fetch(
+                    APPS_SCRIPT_URL + "?action=car&token=" + encodeURIComponent(accessToken)
+                );
+                const payload = await response.json();
+                if (!payload.success || !payload.car) throw new Error(payload.message || "CAR_NOT_FOUND");
+                const source = payload.car;
+                const carData = {
+                    ID: source.id, BRAND: source.brand, MODEL: source.model, YEAR: source.year,
+                    ENGINE: source.engine, MILEAGE: source.mileage, OIL: source.oil,
+                    OIL_BRAND: source.oil_brand, FILTERS: source.filters,
+                    NEXT_KM: source.next_km, NEXT_SERVICE: source.next_service,
+                    NOTES: source.notes, MAINTENANCE_DATE: source.maintenance_date
+                };
 
                 brandElement.textContent =
                     carData["BRAND"] || "---";
@@ -586,7 +537,7 @@
             }
 
             try {
-                const historyUrl = APPS_SCRIPT_URL + "?action=history&id=" + encodeURIComponent(carId);
+                const historyUrl = APPS_SCRIPT_URL + "?action=history&token=" + encodeURIComponent(accessToken);
                 const response = await fetch(historyUrl);
                 if (!response.ok) throw new Error("HTTP " + response.status);
 
