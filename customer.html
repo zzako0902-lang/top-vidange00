@@ -95,29 +95,19 @@
         </section>
 
 
-        <!-- الجزء 04: نوع الزيت والفلاتر المسجلة حاليًا -->
+        <!-- الجزء 04: خدمات الصيانة المنجزة ونوع الزيت -->
         <section class="specs-selection-card">
 
 
             <div class="client-input-group">
 
                 <label>
-                    <i class="fa-solid fa-filter"></i>
-                    أنواع الفلاتر المعدلة
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                    خدمات صيانة منجزة
                 </label>
 
-                <div class="client-select-wrapper">
-
-                    <select id="client-filter-view" disabled>
-
-                        <option id="filter-value">
-                            جاري التحميل...
-                        </option>
-
-                    </select>
-
-                    <i class="fa-solid fa-chevron-down client-select-arrow"></i>
-
+                <div class="client-services-list" id="client-filter-view" aria-live="polite">
+                    <p class="client-services-empty">جاري تحميل الخدمات...</p>
                 </div>
 
             </div>
@@ -366,7 +356,7 @@
             document.getElementById("oil-value");
 
         const filterSelectElement =
-            document.getElementById("filter-value");
+            document.getElementById("client-filter-view");
 
         const nextServiceElement =
             document.getElementById("next-service-date");
@@ -464,9 +454,7 @@
                     carData["OIL"] || "---";
 
 
-                filterSelectElement.textContent =
-                    carData["FILTERS"] ||
-                    "لم يتم تسجيل الفلاتر";
+                renderServiceItems(filterSelectElement, carData["FILTERS"], "لم تُسجّل خدمات صيانة");
 
 
                 const targetKmText = String(carData["NEXT_KM"] || "").replace(/,/g, "").trim();
@@ -627,7 +615,7 @@
                 details.hidden = true;
                 addHistoryDetail(details, "نوع الزيت", oil, "fa-solid fa-droplet");
                 addHistoryDetail(details, "العلامة التجارية", oilBrand, "fa-solid fa-oil-can");
-                addHistoryDetail(details, "الفلاتر المستبدلة", filters, "fa-solid fa-gear");
+                addHistoryServicesDetail(details, "خدمات صيانة منجزة", filters, "fa-solid fa-screwdriver-wrench");
                 addHistoryDetail(details, "الكيلومترات وقت الصيانة", formatMileage(mileage) + " كم", "fa-solid fa-gauge-high");
                 addHistoryDetail(details, "ملاحظات", notes, "fa-solid fa-note-sticky");
 
@@ -642,6 +630,72 @@
                 card.append(button, details);
                 historyListElement.appendChild(card);
             });
+        }
+
+        // عرض الخدمات كسطور بسيطة وواضحة بدل نص طويل متداخل.
+        function splitServiceItems(value) {
+            if (Array.isArray(value)) return value.map(item => String(item).trim()).filter(Boolean);
+            return String(value || "").split(/[,،\n;；]+/).map(item => item.trim()).filter(Boolean);
+        }
+
+        function renderServiceItems(container, value, emptyText) {
+            container.replaceChildren();
+            const services = splitServiceItems(value);
+            if (!services.length) {
+                const empty = document.createElement("p");
+                empty.className = "client-services-empty";
+                empty.textContent = emptyText;
+                container.appendChild(empty);
+                return;
+            }
+            services.forEach(service => {
+                const item = document.createElement("div");
+                item.className = "client-service-item";
+                const mark = document.createElement("i");
+                mark.className = "fa-solid fa-check";
+                mark.setAttribute("aria-hidden", "true");
+                const text = document.createElement("span");
+                text.textContent = service;
+                item.append(mark, text);
+                container.appendChild(item);
+            });
+        }
+
+        function addHistoryServicesDetail(container, label, value, iconClass) {
+            const row = document.createElement("div");
+            row.className = "history-detail-row history-services-row";
+            const icon = document.createElement("i");
+            icon.className = iconClass + " history-detail-icon";
+            icon.setAttribute("aria-hidden", "true");
+            const textWrap = document.createElement("div");
+            textWrap.className = "history-detail-copy history-services-copy";
+            const title = document.createElement("span");
+            title.className = "history-detail-label";
+            title.textContent = label;
+            const list = document.createElement("div");
+            list.className = "history-service-lines";
+            const services = splitServiceItems(value);
+            if (services.length) {
+                services.forEach(service => {
+                    const item = document.createElement("div");
+                    item.className = "history-service-line";
+                    const mark = document.createElement("i");
+                    mark.className = "fa-solid fa-check";
+                    mark.setAttribute("aria-hidden", "true");
+                    const text = document.createElement("span");
+                    text.textContent = service;
+                    item.append(mark, text);
+                    list.appendChild(item);
+                });
+            } else {
+                const empty = document.createElement("strong");
+                empty.className = "history-detail-value";
+                empty.textContent = "لم تُسجّل خدمات صيانة";
+                list.appendChild(empty);
+            }
+            textWrap.append(title, list);
+            row.append(icon, textWrap);
+            container.appendChild(row);
         }
 
         function addHistoryDetail(container, label, value, iconClass) {
