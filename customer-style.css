@@ -700,3 +700,59 @@ body {
     align-items:stretch}.plate-number-box{align-self:flex-start}.quick-status-grid{grid-template-columns:1fr}.next-visit-neon-card{flex-direction:column;
     align-items:stretch}.neon-badge-status{align-self:flex-start}.history-record-oil{display:none}.footer-scan-hint{max-width:65%};
 }
+
+/* تحسين عرض خدمات الصيانة في واجهة الزبون: قائمة نصية خفيفة بلا مربعات متداخلة */
+.client-services-list {
+    display:flex;
+    flex-direction:column;
+    width:100%;
+    background:var(--client-bg);
+    border:1px solid var(--client-border);
+    border-radius:8px;
+    padding:4px 12px;
+    min-width:0;
+}
+.client-service-item {
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    padding:9px 0;
+    border-bottom:1px solid rgba(9,46,82,.9);
+    color:var(--client-text-light);
+    font-size:13px;
+    line-height:1.55;
+    overflow-wrap:anywhere;
+}
+.client-service-item:last-child { border-bottom:0; }
+.client-service-item i, .history-service-line i {
+    color:var(--client-accent);
+    font-size:11px;
+    margin-top:5px;
+    flex:0 0 auto;
+}
+.client-service-item span, .history-service-line span { min-width:0; overflow-wrap:anywhere; }
+.client-services-empty {
+    padding:9px 0;
+    color:var(--client-text-muted);
+    font-size:12px;
+    line-height:1.6;
+}
+.history-services-copy { width:100%; }
+.history-service-lines { display:flex; flex-direction:column; width:100%; }
+.history-service-line {
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    padding:8px 0;
+    border-bottom:1px solid rgba(9,46,82,.9);
+    font-size:13px;
+    font-weight:600;
+    line-height:1.6;
+    overflow-wrap:anywhere;
+}
+.history-service-line:last-child { border-bottom:0; }
+.history-services-row { align-items:flex-start; }
+@media(max-width:480px) {
+    .client-services-list { padding:3px 10px; }
+    .client-service-item, .history-service-line { font-size:12px; padding:8px 0; }
+}
